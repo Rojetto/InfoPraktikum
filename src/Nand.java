@@ -19,6 +19,6 @@ public class Nand {
     }
 
     public void update() {
-        output.setValue(Arrays.asList(inputs).stream().map(Signal::getValue).anyMatch((Boolean value) -> !value));
+        output.setValue(Arrays.asList(inputs).stream().map(Signal::getValue).anyMatch(value -> !value));
     }
 }
