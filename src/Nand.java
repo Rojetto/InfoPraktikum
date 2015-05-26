@@ -2,9 +2,15 @@ import java.util.Arrays;
 
 public class Nand {
     private final Signal[] inputs;
+    private final int delay;
     private Signal output;
 
     public Nand(int numberOfSlots) {
+        this(numberOfSlots, 1);
+    }
+
+    public Nand(int numberOfSlots, int delay) {
+        this.delay = delay;
         this.inputs = new Signal[numberOfSlots];
     }
 
