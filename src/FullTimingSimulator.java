@@ -68,14 +68,14 @@ public class FullTimingSimulator {
             setInputEvents1();
         } else if (version == 2) {
             // Schaltung aufbauen
-            //buildCircuit2();
+            buildCircuit2();
             // Ruhezustand berechnen
             findSteadyState2();
             // EventQueue mit Eingabe-Events füllen
             setInputEvents2();
         } else if (version == 3) {
             // Schaltung aufbauen
-            //buildCircuit3();
+            buildCircuit3();
             // Ruhezustand berechnen
             findSteadyState3();
             // EventQueue mit Eingabe-Events füllen
@@ -130,7 +130,7 @@ public class FullTimingSimulator {
      * Augangssignalen. Über die Größe dieses Arrays wird automatisch auch
      * die Breite des Zählers bestimmt.
      */
-    /*private void buildSynCounter(Signal clk, Signal reset, Signal[] outputs) {
+    private void buildSynCounter(Signal clk, Signal reset, Signal[] outputs) {
         cntCnt++;
         String prefix = "Cnt" + cntCnt;
         int numBits = outputs.length;
@@ -175,7 +175,7 @@ public class FullTimingSimulator {
             reg[i].setInput(1, maskedBitVal);
             reg[i].setOutput(outputs[i]);
         }
-    }*/
+    }
 
 
     /**
@@ -207,7 +207,7 @@ public class FullTimingSimulator {
      * Diese Methode konstruiert eine weitere Schaltung.  Simuliert wird
      * ein einfacher vier Bit synchroner Zähler.
      */
-    /*private void buildCircuit2() {
+    private void buildCircuit2() {
         reset = new Signal("Reset");
         clk = new Signal("Clk");
         a = new Signal[4];
@@ -221,14 +221,14 @@ public class FullTimingSimulator {
             buf[i].setOutput(out[i]);
         }
         buildSynCounter(clk, reset, a);
-    }*/
+    }
 
     /**
      * Diese Methode konstruiert die dritte mögliche Schaltung.  Diese ist
      * sehr kompliziert (enthält ca. 150 Gatter). Die genaue Funktion
      * können Sie ja mal versuchen herauszubekommen.
      */
-    /*private void buildCircuit3() {
+    private void buildCircuit3() {
         writeEnable = new Signal("WriteEnable");
         clk = new Signal("Clk");
         memOut = new Signal[4];
@@ -327,7 +327,7 @@ public class FullTimingSimulator {
             obuf[i].setInput(0, memOAddr[i]);
             obuf[i].setOutput(out_n);
         }
-    }*/
+    }
 
     /**
      * Diese Methode ermittelt den Ruhezustand der Schaltung. Dazu werden
