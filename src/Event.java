@@ -8,6 +8,8 @@ public class Event {
         this.signal = signal;
         this.time = time;
         this.value = value;
+
+        Event.eventQueue.addEvent(this);
     }
 
     public static void setEventQueue(EventQueue eventQueue) {
@@ -15,6 +17,23 @@ public class Event {
     }
 
     public void propagate() {
-        signal.setValue(value);
+        signal.handleEvent(this);
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public Signal getSignal() {
+        return signal;
+    }
+
+    public boolean getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return time + ": " + signal.getName() + " = " + value;
     }
 }

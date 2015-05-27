@@ -12,7 +12,7 @@ public class Signal {
     }
 
     public void setValue(boolean value) {
-        if (outputs.size() == 0 && value != this.value) {
+        if (value != this.value && outputs.size() == 0) {
             System.out.println(name + " -> " + value);
         }
 
@@ -23,11 +23,30 @@ public class Signal {
         }
     }
 
+    public void handleEvent(Event event) {
+        if (event.getSignal() == this) {
+            value = event.getValue();
+
+            for (Nand output : outputs) {
+                output.timedUpdate(event.getTime());
+            }
+        }
+    }
+
     public void addOutput(Nand nand) {
         outputs.add(nand);
     }
 
     public boolean getValue() {
         return value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name + " = " + value;
     }
 }
