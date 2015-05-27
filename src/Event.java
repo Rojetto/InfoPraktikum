@@ -17,6 +17,9 @@ public class Event {
     }
 
     public void propagate() {
+        if (!signal.hasOutputs()) {
+            System.out.println(this);
+        }
         signal.handleEvent(this);
     }
 
@@ -34,6 +37,6 @@ public class Event {
 
     @Override
     public String toString() {
-        return time + ": " + signal.getName() + " = " + value;
+        return time + ": " + signal.getName() + " = " + (value ? 1 : 0);
     }
 }

@@ -3,7 +3,7 @@ import java.util.Set;
 
 public class Signal {
     private final String name;
-    private final Set<Nand> outputs;
+    private final Set<LogicElement> outputs;
     private boolean value;
 
     public Signal(String name) {
@@ -12,13 +12,9 @@ public class Signal {
     }
 
     public void setValue(boolean value) {
-        if (value != this.value && outputs.size() == 0) {
-            System.out.println(name + " -> " + value);
-        }
-
         this.value = value;
 
-        for (Nand output : outputs) {
+        for (LogicElement output : outputs) {
             output.update();
         }
     }
@@ -27,14 +23,18 @@ public class Signal {
         if (event.getSignal() == this) {
             value = event.getValue();
 
-            for (Nand output : outputs) {
+            for (LogicElement output : outputs) {
                 output.timedUpdate(event.getTime());
             }
         }
     }
 
-    public void addOutput(Nand nand) {
+    public void addOutput(LogicElement nand) {
         outputs.add(nand);
+    }
+
+    public boolean hasOutputs() {
+        return outputs.size() > 0;
     }
 
     public boolean getValue() {
