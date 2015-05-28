@@ -12,10 +12,6 @@ public class Signal {
     }
 
     public void setValue(boolean value) {
-        if (value != this.value && outputs.size() == 0) {
-            System.out.println(name + " -> " + value);
-        }
-
         this.value = value;
 
         for (Nand output : outputs) {
@@ -35,6 +31,10 @@ public class Signal {
 
     public void addOutput(Nand nand) {
         outputs.add(nand);
+    }
+
+    public boolean hasOutputs() {
+        return outputs.size() > 0;
     }
 
     public boolean getValue() {

@@ -17,6 +17,9 @@ public class Event {
     }
 
     public void propagate() {
+        if (!signal.hasOutputs()) {
+            System.out.println(this);
+        }
         signal.handleEvent(this);
     }
 
