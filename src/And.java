@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class And extends LogicElement {
     public And(int numberOfInputs, int delay) {
         super(numberOfInputs, delay);
@@ -7,6 +5,11 @@ public class And extends LogicElement {
 
     @Override
     protected boolean calculateOutput(boolean[] inputs) {
-        return Arrays.asList(inputs).stream().allMatch(value -> true);
+        boolean acc = true;
+        for (Boolean bool : inputs) {
+            acc = acc && bool;
+        }
+
+        return acc;
     }
 }
