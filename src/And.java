@@ -6,7 +6,7 @@ public class And extends LogicElement {
     }
 
     @Override
-    protected boolean calculateOutput(Signal[] inputs) {
-        return Arrays.asList(inputs).stream().map(Signal::getValue).allMatch(value -> true);
+    protected boolean calculateOutput(boolean[] inputs) {
+        return Arrays.asList(inputs).stream().allMatch(value -> true);
     }
 }

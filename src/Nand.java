@@ -1,12 +1,15 @@
-import java.util.Arrays;
-
 public class Nand extends LogicElement {
     public Nand(int numberOfInputs, int delay) {
         super(numberOfInputs, delay);
     }
 
     @Override
-    protected boolean calculateOutput(Signal[] inputs) {
-        return Arrays.asList(inputs).stream().map(Signal::getValue).anyMatch(value -> !value);
+    protected boolean calculateOutput(boolean[] inputs) {
+        boolean acc = true;
+        for (Boolean bool : inputs) {
+            acc = acc && bool;
+        }
+
+        return !acc;
     }
 }

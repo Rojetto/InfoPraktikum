@@ -4,11 +4,11 @@ public class Exor extends LogicElement {
     }
 
     @Override
-    protected boolean calculateOutput(Signal[] inputs) {
+    protected boolean calculateOutput(boolean[] inputs) {
         int trueInputs = 0;
 
-        for (Signal input : inputs) {
-            if (input.getValue()) {
+        for (Boolean value : inputs) {
+            if (value) {
                 trueInputs++;
             }
         }

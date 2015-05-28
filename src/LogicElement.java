@@ -1,7 +1,7 @@
 public abstract class LogicElement {
-    private final Signal[] inputs;
-    private final int delay;
-    private Signal output;
+    protected final Signal[] inputs;
+    protected final int delay;
+    protected Signal output;
     private boolean lastOutput;
     private boolean isFirstCalculation;
 
@@ -22,7 +22,7 @@ public abstract class LogicElement {
     }
 
     public void update() {
-        boolean newValue = calculateOutput(inputs);
+        boolean newValue = calculateOutput(getInputValues());
 
         if (output.getValue() != newValue) {
             output.setValue(newValue);
@@ -30,7 +30,7 @@ public abstract class LogicElement {
     }
 
     public void timedUpdate(int time) {
-        boolean newValue = calculateOutput(inputs);
+        boolean newValue = calculateOutput(getInputValues());
 
         if (newValue != lastOutput || isFirstCalculation) {
             new Event(output, time + delay, newValue);
@@ -39,5 +39,14 @@ public abstract class LogicElement {
         }
     }
 
-    protected abstract boolean calculateOutput(Signal[] inputs);
+    private boolean[] getInputValues() {
+        boolean[] inputArray = new boolean[inputs.length];
+        for (int i = 0; i < inputs.length; i++) {
+            inputArray[i] = inputs[i].getValue();
+        }
+
+        return inputArray;
+    }
+
+    protected abstract boolean calculateOutput(boolean[] inputs);
 }
