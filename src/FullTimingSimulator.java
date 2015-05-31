@@ -450,7 +450,7 @@ public class FullTimingSimulator {
      * Sie natürlich auch durch Auswertung der Kommandozeilenparameter tuen.
      */
     static public void main(String[] args) {
-        FullTimingSimulator t = new FullTimingSimulator(3);
+        FullTimingSimulator t = new FullTimingSimulator(2);
         t.simulate();
     }
 }

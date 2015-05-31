@@ -24,9 +24,7 @@ public abstract class LogicElement {
     public void update() {
         boolean newValue = calculateOutput(getInputValues());
 
-        if (output.getValue() != newValue) {
-            output.setValue(newValue);
-        }
+        output.setValue(newValue);
     }
 
     public void timedUpdate(int time) {
