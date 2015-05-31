@@ -5,7 +5,7 @@ public class Signal {
     private final String name;
     private final Set<LogicElement> outputs;
     private boolean value;
-    private int updateCounter;
+    private boolean hasBeenUpdated;
 
     public Signal(String name) {
         this.name = name;
@@ -13,10 +13,11 @@ public class Signal {
     }
 
     public void setValue(boolean value) {
+        boolean oldValue = this.value;
         this.value = value;
 
-        if (updateCounter < 10) {
-            updateCounter++;
+        if (!hasBeenUpdated || oldValue != value) {
+            hasBeenUpdated = true;
             for (LogicElement output : outputs) {
                 output.update();
             }
