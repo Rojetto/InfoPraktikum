@@ -2,8 +2,8 @@ public class FF extends LogicElement {
     private boolean storedValue;
     private boolean lastClockValue;
 
-    public FF(int delay) {
-        super(2, delay);
+    public FF(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override

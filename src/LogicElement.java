@@ -1,14 +1,20 @@
 public abstract class LogicElement {
     protected final Signal[] inputs;
     protected final int delay;
+    protected final String name;
     protected Signal output;
     private boolean lastOutput;
     private boolean isFirstCalculation;
 
-    protected LogicElement(int numberOfInputs, int delay) {
+    public LogicElement(int numberOfInputs, int delay, String name) {
         this.inputs = new Signal[numberOfInputs];
         this.delay = delay;
+        this.name = name;
         this.isFirstCalculation = true;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setInput(int slot, Signal signal) {

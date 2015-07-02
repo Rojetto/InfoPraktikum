@@ -1,6 +1,7 @@
 public class Exor extends LogicElement {
-    protected Exor(int numberOfInputs, int delay) {
-        super(numberOfInputs, delay);
+
+    public Exor(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override

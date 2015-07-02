@@ -1,6 +1,6 @@
 public class Nand extends LogicElement {
-    public Nand(int numberOfInputs, int delay) {
-        super(numberOfInputs, delay);
+    public Nand(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override

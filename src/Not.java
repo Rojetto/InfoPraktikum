@@ -1,6 +1,6 @@
 public class Not extends LogicElement {
-    public Not(int delay) {
-        super(1, delay);
+    public Not(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override

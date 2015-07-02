@@ -1,8 +1,8 @@
 public class Latch extends LogicElement {
     private boolean storedValue;
 
-    public Latch(int delay) {
-        super(2, delay);
+    public Latch(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override

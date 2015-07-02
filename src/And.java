@@ -1,6 +1,6 @@
 public class And extends LogicElement {
-    public And(int numberOfInputs, int delay) {
-        super(numberOfInputs, delay);
+    public And(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override

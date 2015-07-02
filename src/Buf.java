@@ -1,6 +1,6 @@
 public class Buf extends LogicElement {
-    public Buf(int delay) {
-        super(1, delay);
+    public Buf(int numberOfInputs, int delay, String name) {
+        super(numberOfInputs, delay, name);
     }
 
     @Override
