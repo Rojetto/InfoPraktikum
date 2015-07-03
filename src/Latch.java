@@ -1,16 +1,33 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class Latch extends LogicElement {
     private boolean storedValue;
 
     public Latch(int numberOfInputs, int delay, String name) {
-        super(numberOfInputs, delay, name);
+        super(2, delay, name);
     }
 
     @Override
-    protected boolean calculateOutput(boolean[] inputs) {
-        if (inputs[0]) {
-            storedValue = inputs[1];
+    protected String[] inputNames() {
+        return new String[]{"d", "e"};
+    }
+
+    @Override
+    protected String[] outputNames() {
+        return new String[]{"q", "nq"};
+    }
+
+    @Override
+    protected Map<String, Boolean> calculateOutput(Map<String, Boolean> inputs) {
+        if (inputs.get("e")) {
+            storedValue = inputs.get("d");
         }
 
-        return storedValue;
+        Map<String, Boolean> output = new HashMap<>();
+        output.put("q", storedValue);
+        output.put("nq", !storedValue);
+
+        return output;
     }
 }

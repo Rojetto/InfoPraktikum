@@ -5,22 +5,17 @@ public class Signal {
     private final String name;
     private final Set<LogicElement> outputs;
     private boolean value;
-    private boolean hasBeenUpdated;
 
     public Signal(String name) {
         this.name = name;
         this.outputs = new HashSet<>();
     }
 
-    public void setValue(boolean value) {
-        boolean oldValue = this.value;
+    public void setValueAndPropagate(boolean value) {
         this.value = value;
 
-        if (!hasBeenUpdated || oldValue != value) {
-            hasBeenUpdated = true;
-            for (LogicElement output : outputs) {
-                output.update();
-            }
+        for (LogicElement output : outputs) {
+            output.update();
         }
     }
 

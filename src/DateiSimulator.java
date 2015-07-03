@@ -7,7 +7,7 @@ public class DateiSimulator {
 
         try {
             String content = readFileContent(circuitFile);
-            Circuit cir = new CirFileParser().parse(content);
+            CirFileParser.parse(content);
         } catch (IOException e) {
             e.printStackTrace();
         }

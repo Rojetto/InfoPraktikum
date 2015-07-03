@@ -1,6 +1,6 @@
-public class Not extends LogicElement {
+public class Not extends SimpleGate {
     public Not(int numberOfInputs, int delay, String name) {
-        super(numberOfInputs, delay, name);
+        super(1, delay, name);
     }
 
     @Override

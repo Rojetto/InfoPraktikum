@@ -1,4 +1,4 @@
-public class Nand extends LogicElement {
+public class Nand extends SimpleGate {
     public Nand(int numberOfInputs, int delay, String name) {
         super(numberOfInputs, delay, name);
     }

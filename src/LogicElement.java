@@ -1,13 +1,19 @@
+import java.util.*;
+
 public abstract class LogicElement {
-    protected final Signal[] inputs;
-    protected final int delay;
-    protected final String name;
-    protected Signal output;
-    private boolean lastOutput;
+    private final Map<String, Signal> inputs;
+    private final int numberOfInputs;
+    private final int delay;
+    private final String name;
+    private final Map<String, Signal> outputs;
+    private Map<String, Boolean> lastOutputs;
     private boolean isFirstCalculation;
 
     public LogicElement(int numberOfInputs, int delay, String name) {
-        this.inputs = new Signal[numberOfInputs];
+        this.inputs = new HashMap<>();
+        this.numberOfInputs = numberOfInputs;
+        this.outputs = new HashMap<>();
+        this.lastOutputs = new HashMap<>();
         this.delay = delay;
         this.name = name;
         this.isFirstCalculation = true;
@@ -17,40 +23,88 @@ public abstract class LogicElement {
         return name;
     }
 
-    public void setInput(int slot, Signal signal) {
-        inputs[slot] = signal;
+    public void setInput(String slot, Signal signal) {
+        inputs.put(slot, signal);
 
         signal.addOutput(this);
     }
 
-    public void setOutput(Signal output) {
-        this.output = output;
+    public void setOutput(String slot, Signal output) {
+        outputs.put(slot, output);
     }
 
     public void update() {
-        boolean newValue = calculateOutput(getInputValues());
-
-        output.setValue(newValue);
+        propagateCalculations(calculateOutput(getInputValues()), false, 0);
     }
 
     public void timedUpdate(int time) {
-        boolean newValue = calculateOutput(getInputValues());
+        propagateCalculations(calculateOutput(getInputValues()), true, time);
+    }
 
-        if (newValue != lastOutput || isFirstCalculation) {
-            new Event(output, time + delay, newValue);
-            lastOutput = newValue;
-            isFirstCalculation = false;
+    private void propagateCalculations(Map<String, Boolean> values, boolean timed, int time) {
+        List<Signal> signalsToUpdate = new ArrayList<>();
+
+        for (String output : lastOutputs.keySet()) {
+            if ((values.get(output) != lastOutputs.get(output) || isFirstCalculation) && outputs.get(output) != null) {
+                signalsToUpdate.add(outputs.get(output));
+            }
+        }
+
+        isFirstCalculation = false;
+        lastOutputs = values;
+
+        for (Signal s : signalsToUpdate) {
+            if (timed) {
+                new Event(s, time + delay, values.get(s.getName()));
+            } else {
+                s.setValueAndPropagate(values.get(s.getName()));
+            }
         }
     }
 
-    private boolean[] getInputValues() {
-        boolean[] inputArray = new boolean[inputs.length];
-        for (int i = 0; i < inputs.length; i++) {
-            inputArray[i] = inputs[i].getValue();
+    private Map<String, Boolean> getInputValues() {
+        Map<String, Boolean> inputValues = new HashMap<>();
+
+        for (String input : inputs.keySet()) {
+            inputValues.put(input, inputs.get(input).getValue());
         }
 
-        return inputArray;
+        return inputValues;
     }
 
-    protected abstract boolean calculateOutput(boolean[] inputs);
+    public void connectSignal(String slot, Signal signal) throws InvalidConnectionException {
+        boolean connected = false;
+
+        if (stringMatchesRegexArray(inputNames(), slot)) {
+            setInput(slot, signal);
+            connected = true;
+        } else if (stringMatchesRegexArray(outputNames(), slot)) {
+            setOutput(slot, signal);
+            connected = true;
+        }
+
+        if (!connected) {
+            throw new InvalidConnectionException("Der Slot " + slot + " existiert bei Gattern vom Typ " +
+                    getClass().getName() + " nicht");
+        }
+    }
+
+    private boolean stringMatchesRegexArray(String[] array, String s) {
+        for (int i = 0; i < array.length; i++) {
+            if (s.matches(array[i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + " " + name + ": Inputs=" + numberOfInputs + " Delay=" + delay;
+    }
+
+    protected abstract String[] inputNames();
+    protected abstract String[] outputNames();
+    protected abstract Map<String, Boolean> calculateOutput(Map<String, Boolean> inputValues);
 }

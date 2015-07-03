@@ -1,4 +1,4 @@
-public class And extends LogicElement {
+public class And extends SimpleGate {
     public And(int numberOfInputs, int delay, String name) {
         super(numberOfInputs, delay, name);
     }

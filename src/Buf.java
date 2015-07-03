@@ -1,6 +1,6 @@
-public class Buf extends LogicElement {
+public class Buf extends SimpleGate {
     public Buf(int numberOfInputs, int delay, String name) {
-        super(numberOfInputs, delay, name);
+        super(1, delay, name);
     }
 
     @Override

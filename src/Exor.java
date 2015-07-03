@@ -1,4 +1,4 @@
-public class Exor extends LogicElement {
+public class Exor extends SimpleGate {
 
     public Exor(int numberOfInputs, int delay, String name) {
         super(numberOfInputs, delay, name);

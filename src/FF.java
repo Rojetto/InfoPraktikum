@@ -1,21 +1,39 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class FF extends LogicElement {
     private boolean storedValue;
     private boolean lastClockValue;
 
     public FF(int numberOfInputs, int delay, String name) {
-        super(numberOfInputs, delay, name);
+        super(2, delay, name);
     }
 
     @Override
-    protected boolean calculateOutput(boolean[] inputs) {
-        boolean clock = inputs[0];
-        boolean data = inputs[1];
+    protected String[] inputNames() {
+        return new String[]{"c", "d"};
+    }
+
+    @Override
+    protected String[] outputNames() {
+        return new String[]{"q", "nq"};
+    }
+
+    @Override
+    protected Map<String, Boolean> calculateOutput(Map<String, Boolean> inputs) {
+        boolean clock = inputs.get("c");
+        boolean data = inputs.get("d");
 
         if (!lastClockValue && clock) {
             storedValue = data;
         }
 
         lastClockValue = clock;
-        return storedValue;
+
+        Map<String, Boolean> output = new HashMap<>();
+        output.put("q", storedValue);
+        output.put("nq", !storedValue);
+
+        return output;
     }
 }
