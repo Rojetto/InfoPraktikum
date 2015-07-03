@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Circuit {
@@ -46,5 +48,21 @@ public class Circuit {
 
     public LogicElement getGate(String name) {
         return gates.get(name);
+    }
+
+    public List<Signal> getInputs() {
+        return new ArrayList<>(inputs.values());
+    }
+
+    public List<Signal> getOutputs() {
+        return new ArrayList<>(outputs.values());
+    }
+
+    public List<Signal> getSignals() {
+        return new ArrayList<>(signals.values());
+    }
+
+    public List<LogicElement> getGates() {
+        return new ArrayList<>(gates.values());
     }
 }

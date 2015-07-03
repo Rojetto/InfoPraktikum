@@ -55,7 +55,7 @@ public abstract class LogicElement {
 
         for (Signal s : signalsToUpdate) {
             if (timed) {
-                new Event(s, time + delay, values.get(s.getName()));
+                new Event(s, time + delay, values.get(getSignalSlot(s)));
             } else {
                 s.setValueAndPropagate(values.get(s.getName()));
             }
@@ -97,6 +97,22 @@ public abstract class LogicElement {
         }
 
         return false;
+    }
+
+    private String getSignalSlot(Signal signal) {
+        for (String slot : inputs.keySet()) {
+            if (inputs.get(slot) == signal) {
+                return slot;
+            }
+        }
+
+        for (String slot : outputs.keySet()) {
+            if (outputs.get(slot) == signal) {
+                return slot;
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -10,10 +10,11 @@ public abstract class SimpleGate extends LogicElement {
     protected Map<String, Boolean> calculateOutput(Map<String, Boolean> inputValues) {
         Map<String, Boolean> outputMap = new HashMap<>();
         boolean[] inputArray = new boolean[inputValues.size()];
-        String[] keys = (String[]) inputValues.keySet().toArray();
 
-        for (int i = 0; i < keys.length; i++) {
-            inputArray[i] = inputValues.get(keys[i]);
+        int counter = 0;
+        for (boolean value : inputValues.values()) {
+            inputArray[counter] = value;
+            counter++;
         }
 
         outputMap.put("o", calculateOutput(inputArray));

@@ -1,3 +1,5 @@
+import sun.rmi.runtime.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -77,11 +79,22 @@ public class CirFileParser {
 
                     break;
                 case CONNECTION:
-                    String gate = m.group(1);
+                    String gateName = m.group(1);
                     String slot = m.group(2);
-                    String signal = m.group(3);
+                    String signalName = m.group(3);
 
-                    circuit.getGate(gate).connectSignal(slot, circuit.getSignal(signal));
+                    Signal signal = circuit.getSignal(signalName);
+                    LogicElement gate = circuit.getGate(gateName);
+
+                    if (signal == null) {
+                        throw new InvalidStatementException("Signal " + signalName + " existiert nicht");
+                    }
+
+                    if (gate == null) {
+                        throw new InvalidStatementException("Gatter " + gateName + " existiert nicht");
+                    }
+
+                    gate.connectSignal(slot, signal);
 
                     break;
             }
