@@ -19,6 +19,7 @@ public class EventQueue {
 
     public void addEvent(Event event) {
         removeEventWithTimeAndSignal(event.getTime(), event.getSignal());
+        // TODO: Kann Events erzeugen, die nichts ändern
 
         for (int i = queue.size() - 1; i >= 0; i--) {
             if (event.getTime() >= queue.get(i).getTime()) {

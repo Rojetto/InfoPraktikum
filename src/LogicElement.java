@@ -44,7 +44,7 @@ public abstract class LogicElement {
     private void propagateCalculations(Map<String, Boolean> values, boolean timed, int time) {
         List<Signal> signalsToUpdate = new ArrayList<>();
 
-        for (String output : lastOutputs.keySet()) {
+        for (String output : outputs.keySet()) {
             if ((values.get(output) != lastOutputs.get(output) || isFirstCalculation) && outputs.get(output) != null) {
                 signalsToUpdate.add(outputs.get(output));
             }
@@ -57,7 +57,7 @@ public abstract class LogicElement {
             if (timed) {
                 new Event(s, time + delay, values.get(getSignalSlot(s)));
             } else {
-                s.setValueAndPropagate(values.get(s.getName()));
+                s.setValueAndPropagate(values.get(getSignalSlot(s)));
             }
         }
     }

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CirFileParser {
+public class CirParser {
     private static final Map<Pattern, Statement> patterns = new HashMap<>();
     private static final Pattern statementPattern = Pattern.compile("\\s*([^;]+?)\\s*;");
     private static final Map<String, Class<? extends LogicElement>> elementTypes = new HashMap<>();
