@@ -1,25 +1,25 @@
 import java.util.*;
 
 public class Circuit {
-    private final Map<String, Signal> inputs;
-    private final Map<String, Signal> outputs;
+    private final List<Signal> inputs;
+    private final List<Signal> outputs;
     private final Map<String, Signal> signals;
     private final Map<String, LogicElement> gates;
 
     public Circuit() {
-        inputs = new HashMap<>();
-        outputs = new HashMap<>();
+        inputs = new ArrayList<>();
+        outputs = new ArrayList<>();
         signals = new HashMap<>();
         gates = new HashMap<>();
     }
 
     public void addInput(Signal signal) {
-        inputs.put(signal.getName(), signal);
+        inputs.add(signal);
         signals.put(signal.getName(), signal);
     }
 
     public void addOutput(Signal signal) {
-        outputs.put(signal.getName(), signal);
+        outputs.add(signal);
         signals.put(signal.getName(), signal);
     }
 
@@ -31,14 +31,6 @@ public class Circuit {
         gates.put(gate.getName(), gate);
     }
 
-    public Signal getInput(String name) {
-        return inputs.get(name);
-    }
-
-    public Signal getOutput(String name) {
-        return outputs.get(name);
-    }
-
     public Signal getSignal(String name) {
         return signals.get(name);
     }
@@ -48,11 +40,11 @@ public class Circuit {
     }
 
     public List<Signal> getInputs() {
-        return new ArrayList<>(inputs.values());
+        return new ArrayList<>(inputs);
     }
 
     public List<Signal> getOutputs() {
-        return new ArrayList<>(outputs.values());
+        return new ArrayList<>(outputs);
     }
 
     public List<Signal> getSignals() {
@@ -60,25 +52,9 @@ public class Circuit {
     }
 
     public List<Signal> getInputsAndOutputs() {
-        List<String> inputNames = new ArrayList<>(inputs.keySet());
-        Collections.sort(inputNames);
-
-        List<Signal> inputList = new ArrayList<>();
-        for (String name : inputNames) {
-            inputList.add(inputs.get(name));
-        }
-
-        List<String> outputNames = new ArrayList<>(outputs.keySet());
-        Collections.sort(outputNames);
-
-        List<Signal> outputList = new ArrayList<>();
-        for (String name : outputNames) {
-            outputList.add(outputs.get(name));
-        }
-
         List<Signal> inputsAndOutputs = new ArrayList<>();
-        inputsAndOutputs.addAll(inputList);
-        inputsAndOutputs.addAll(outputList);
+        inputsAndOutputs.addAll(inputs);
+        inputsAndOutputs.addAll(outputs);
 
         return inputsAndOutputs;
     }
