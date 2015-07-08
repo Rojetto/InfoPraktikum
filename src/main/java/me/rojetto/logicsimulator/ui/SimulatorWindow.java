@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 
 import static javax.swing.SpringLayout.*;
@@ -145,9 +144,9 @@ public class SimulatorWindow extends JFrame implements ActionListener {
                 imageLabel.setIcon(new ImageIcon(graph));
 
                 pack();
-            } catch (IOException e1) {
-                System.out.println("Dateien konnten nicht gefunden werden.");
-                return;
+            } catch (Exception e1) {
+                System.out.println("Bei der Simulation ist ein Fehler aufgetreten.");
+                System.out.println(e1.getClass().getName() + ": " + e1.getMessage());
             }
         }
     }
