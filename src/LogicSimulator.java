@@ -42,6 +42,8 @@ public class LogicSimulator {
             System.out.println(ErgCreator.create(result));
 
             ImageIO.write(DiagramCreator.create(result), "PNG", graphFile);
+        } else {
+            new SimulatorWindow();
         }
     }
 
