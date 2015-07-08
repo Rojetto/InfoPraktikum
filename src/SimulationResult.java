@@ -4,8 +4,10 @@ import java.util.Map;
 
 public class SimulationResult {
     private final List<Keyframe> keyframes;
+    private final List<Signal> signals;
 
-    public SimulationResult(Map<Signal, Boolean> startValues, List<Event> history) {
+    public SimulationResult(Map<Signal, Boolean> startValues, List<Event> history, List<Signal> signals) {
+        this.signals = signals;
         keyframes = new ArrayList<>();
         keyframes.add(new Keyframe(0, startValues));
 
@@ -22,7 +24,19 @@ public class SimulationResult {
         keyframes.add(frame);
     }
 
+    public Keyframe lastFrame() {
+        return keyframes.get(keyframes.size() - 1);
+    }
+
     public List<Keyframe> getKeyframes() {
         return new ArrayList<>(keyframes);
+    }
+
+    public List<Signal> getSignals() {
+        return new ArrayList<>(signals);
+    }
+
+    public Keyframe firstFrame() {
+        return keyframes.get(0);
     }
 }

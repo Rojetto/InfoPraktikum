@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class LogicElement {
     private final Map<String, Signal> inputs;
@@ -57,6 +60,7 @@ public abstract class LogicElement {
             if (timed) {
                 new Event(s, time + delay, values.get(getSignalSlot(s)));
             } else {
+                // TODO: Schmiert bei instabilen Rückkopplungen ab
                 s.setValueAndPropagate(values.get(getSignalSlot(s)));
             }
         }

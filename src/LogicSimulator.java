@@ -1,4 +1,8 @@
-import java.io.*;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +47,10 @@ public class LogicSimulator {
             e.propagate();
         }
 
-        SimulationResult result = new SimulationResult(startValues, history);
+        SimulationResult result = new SimulationResult(startValues, history, inputsAndOutputs);
 
-        System.out.println(ErgCreator.create(result, inputsAndOutputs));
+        System.out.println(ErgCreator.create(result));
+        Image graph = DiagramCreator.create(result);
     }
 
     public static void main(String[] args) {

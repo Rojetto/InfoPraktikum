@@ -1,7 +1,8 @@
 import java.util.List;
 
 public class ErgCreator {
-    public static String create(SimulationResult result, List<Signal> signals) {
+    public static String create(SimulationResult result) {
+        List<Signal> signals = result.getSignals();
         String headerFormat = "Zeit   ";
         String rowFormat = "%-7d";
         String[] names = new String[signals.size()];
