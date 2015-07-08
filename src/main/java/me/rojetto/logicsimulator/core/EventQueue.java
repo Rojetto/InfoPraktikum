@@ -20,8 +20,9 @@ public class EventQueue {
     }
 
     public void addEvent(Event event) {
-        removeEventWithTimeAndSignal(event.getTime(), event.getSignal());
-        // TODO: Kann Events erzeugen, die nichts ändern
+        if (removeEventWithTimeAndSignal(event.getTime(), event.getSignal())) {
+            return;
+        }
 
         for (int i = queue.size() - 1; i >= 0; i--) {
             if (event.getTime() >= queue.get(i).getTime()) {
@@ -33,13 +34,17 @@ public class EventQueue {
         queue.add(0, event);
     }
 
-    private void removeEventWithTimeAndSignal(int time, Signal signal) {
+    private boolean removeEventWithTimeAndSignal(int time, Signal signal) {
         Iterator<Event> iter = queue.iterator();
+        boolean didRemoveSomething = false;
         while (iter.hasNext()) {
             Event next = iter.next();
             if (next.getSignal() == signal && next.getTime() == time) {
                 iter.remove();
+                didRemoveSomething = true;
             }
         }
+
+        return didRemoveSomething;
     }
 }
