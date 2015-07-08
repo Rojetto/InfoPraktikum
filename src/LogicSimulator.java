@@ -1,8 +1,5 @@
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,20 +9,56 @@ public class LogicSimulator {
     private final EventQueue queue;
     private Circuit circuit;
 
-    public LogicSimulator(File circuitFile, File eventFile) {
+    public LogicSimulator(File circuitFile, File eventFile) throws IOException {
         queue = new EventQueue();
         circuit = null;
         Event.setEventQueue(queue);
 
-        try {
-            String circuitString = readFileContent(circuitFile);
-            circuit = CirParser.parse(circuitString);
-            String eventString = readFileContent(eventFile);
-            EventParser.parse(eventString, circuit);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String circuitString = readFileContent(circuitFile);
+        circuit = CirParser.parse(circuitString);
+        String eventString = readFileContent(eventFile);
+        EventParser.parse(eventString, circuit);
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length > 0) {
+            if (args.length != 4) {
+                System.out.println("Unzureichende Parameter.");
+                System.out.println("Format: [cirPfad] [eventsPfad] [ergPfad] [pngPfad]");
+                return;
+            }
+
+            File circuitFile = new File(args[0]);
+            File eventFile = new File(args[1]);
+            File ergFile = new File(args[2]);
+            File graphFile = new File(args[3]);
+
+            LogicSimulator simulator = new LogicSimulator(circuitFile, eventFile);
+            SimulationResult result = simulator.simulate();
+
+            ergFile.delete();
+            ergFile.createNewFile();
+            System.setOut(new PrintStream(ergFile));
+            System.out.println(ErgCreator.create(result));
+
+            ImageIO.write(DiagramCreator.create(result), "PNG", graphFile);
+        }
+    }
+
+    private String readFileContent(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String content = "";
+
+        String line = reader.readLine();
+        while (line != null) {
+            content += line + "\n";
+            line = reader.readLine();
         }
 
+        return content;
+    }
+
+    public SimulationResult simulate() {
         for (Signal input : circuit.getInputs()) {
             input.setValueAndPropagate(false);
         }
@@ -47,29 +80,6 @@ public class LogicSimulator {
             e.propagate();
         }
 
-        SimulationResult result = new SimulationResult(startValues, history, inputsAndOutputs);
-
-        System.out.println(ErgCreator.create(result));
-        Image graph = DiagramCreator.create(result);
-    }
-
-    public static void main(String[] args) {
-        File circuitFile = new File(args[0]);
-        File eventFile = new File(args[1]);
-
-        new LogicSimulator(circuitFile, eventFile);
-    }
-
-    private String readFileContent(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String content = "";
-
-        String line = reader.readLine();
-        while (line != null) {
-            content += line + "\n";
-            line = reader.readLine();
-        }
-
-        return content;
+        return new SimulationResult(startValues, history, inputsAndOutputs);
     }
 }
