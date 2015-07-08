@@ -47,7 +47,7 @@ public class LogicSimulator {
 
             ergFile.delete();
             ergFile.createNewFile();
-            System.setOut(new PrintStream(ergFile));
+            System.setOut(new PrintStream(ergFile)); // TODO: Irgendwie Mist
             System.out.println(ErgCreator.create(result));
 
             ImageIO.write(DiagramCreator.create(result), "PNG", graphFile);

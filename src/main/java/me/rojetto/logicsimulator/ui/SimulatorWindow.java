@@ -38,15 +38,16 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
         textArea = new JTextArea();
         textArea.setEditable(false);
-        textArea.setPreferredSize(new Dimension(500, 500));
         PrintStream p = new PrintStream(new TextAreaOutputStream(textArea));
-        System.setOut(p);
+        System.setOut(p); // TODO: Neeeeeee
         System.setErr(p);
-        add(new JScrollPane(textArea), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 300));
+        add(scrollPane, BorderLayout.CENTER);
 
         SpringLayout inputLayout = new SpringLayout();
         inputPanel = new JPanel(inputLayout);
-        inputPanel.setPreferredSize(new Dimension(0, 100));
+        inputPanel.setPreferredSize(new Dimension(400, 100));
         add(inputPanel, BorderLayout.NORTH);
 
         circuitField = new JTextField();
@@ -87,6 +88,10 @@ public class SimulatorWindow extends JFrame implements ActionListener {
         add(new JScrollPane(imageLabel), BorderLayout.SOUTH);
 
         pack();
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+        setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
         setVisible(true);
     }
 
