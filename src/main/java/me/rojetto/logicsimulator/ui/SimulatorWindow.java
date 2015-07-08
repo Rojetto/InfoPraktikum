@@ -40,7 +40,9 @@ public class SimulatorWindow extends JFrame implements ActionListener {
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setPreferredSize(new Dimension(500, 500));
-        System.setOut(new PrintStream(new TextAreaOutputStream(textArea)));
+        PrintStream p = new PrintStream(new TextAreaOutputStream(textArea));
+        System.setOut(p);
+        System.setErr(p);
         add(new JScrollPane(textArea), BorderLayout.CENTER);
 
         SpringLayout inputLayout = new SpringLayout();
@@ -133,6 +135,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == simulateButton) {
             try {
+                textArea.setText("");
                 LogicSimulator simulator = new LogicSimulator(getCircuitFile(), getEventFile());
                 SimulationResult result = simulator.simulate();
 
