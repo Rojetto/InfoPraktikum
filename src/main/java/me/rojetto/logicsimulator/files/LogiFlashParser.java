@@ -2,7 +2,7 @@ package me.rojetto.logicsimulator.files;
 
 import me.rojetto.logicsimulator.core.Circuit;
 import me.rojetto.logicsimulator.core.Gate;
-import me.rojetto.logicsimulator.exception.InvalidStatementException;
+import me.rojetto.logicsimulator.core.Signal;
 import me.rojetto.logicsimulator.gate.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,15 +25,16 @@ public class LogiFlashParser {
     private static final int STANDARD_DELAY = 1;
 
     private final File file;
-    private final Map<LogiVector, Set<LogiVector>> wires;
+    private final List<LogiWire> wires;
     private final Map<LogiVector, LogiSlot> outputs;
     private final Map<LogiVector, LogiSlot> inputs;
 
     private int gateCounter = 0;
+    private int signalCounter = 0;
 
     public LogiFlashParser(File file) {
         this.file = file;
-        this.wires = new HashMap<>();
+        this.wires = new ArrayList<>();
         this.outputs = new HashMap<>();
         this.inputs = new HashMap<>();
     }
@@ -43,16 +44,77 @@ public class LogiFlashParser {
         Document dom = getDocument();
 
         NodeList wireNodes = dom.getElementsByTagName("wire");
+        List<LogiWireSegment> segments = new ArrayList<>();
         for (int i = 0; i < wireNodes.getLength(); i++) {
             Element node = (Element) wireNodes.item(i);
-            addWire(Integer.parseInt(node.getAttribute("rightx")), Integer.parseInt(node.getAttribute("righty")),
-                    Integer.parseInt(node.getAttribute("leftx")), Integer.parseInt(node.getAttribute("lefty")));
+            LogiVector p1 = new LogiVector(Integer.parseInt(node.getAttribute("rightx")),
+                    Integer.parseInt(node.getAttribute("righty")));
+            LogiVector p2 = new LogiVector(Integer.parseInt(node.getAttribute("leftx")),
+                    Integer.parseInt(node.getAttribute("lefty")));
+
+            segments.add(new LogiWireSegment(p1, p2));
+        }
+
+        while (segments.size() > 0) {
+            Iterator<LogiWireSegment> it = segments.iterator();
+            int howManyRemoved = 0;
+            while (it.hasNext()) {
+                LogiWireSegment s = it.next();
+
+                for (LogiWire wire : wires) {
+                    if (wire.segmentFits(s)) {
+                        wire.addSegment(s);
+                        it.remove();
+                        howManyRemoved++;
+                    }
+                }
+            }
+
+            if (segments.size() > 0 && howManyRemoved == 0) {
+                LogiWire newWire = new LogiWire();
+                newWire.addSegment(segments.remove(0));
+                wires.add(newWire);
+            }
         }
 
         NodeList gateNodes = dom.getElementsByTagName("gate");
         for (int i = 0; i < gateNodes.getLength(); i++) {
             Element node = (Element) gateNodes.item(i);
             Gate gate = fromNode(node);
+            circuit.addGate(gate);
+            addSlots(node, gate);
+        }
+
+        for (LogiVector outputPos : outputs.keySet()) {
+            LogiSlot slot = outputs.get(outputPos);
+            Gate gate = slot.getGate();
+            Signal newSignal = new Signal(newSignalName());
+            circuit.addSignal(newSignal);
+            if (!outputs.get(outputPos).isInverted()) {
+                gate.connectSignal(slot.getSlot(), newSignal);
+            } else {
+                Gate notOutput = new Not(1, STANDARD_DELAY, newGateName());
+                circuit.addGate(notOutput);
+                Signal signalBetween = new Signal(newSignalName());
+                circuit.addSignal(signalBetween);
+                gate.connectSignal(slot.getSlot(), signalBetween);
+                notOutput.connectSignal("i1", signalBetween);
+                notOutput.connectSignal("o", newSignal);
+            }
+
+            for (LogiSlot connectedInputSlot : getConnectedInputSlots(outputPos)) {
+                if (!connectedInputSlot.isInverted()) {
+                    connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), newSignal);
+                } else {
+                    Gate notInput = new Not(1, STANDARD_DELAY, newGateName());
+                    circuit.addGate(notInput);
+                    Signal signalBetween = new Signal(newSignalName());
+                    circuit.addSignal(signalBetween);
+                    notInput.connectSignal("i1", newSignal);
+                    notInput.connectSignal("o", signalBetween);
+                    connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), signalBetween);
+                }
+            }
         }
 
         return circuit;
@@ -90,8 +152,7 @@ public class LogiFlashParser {
         return gate;
     }
 
-    private void addSlots(Element node) {
-        Gate gate = fromNode(node);
+    private void addSlots(Element node, Gate gate) {
         double rotation = Double.parseDouble(node.getAttribute("rot"));
         LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
         List<LogiVector> relativeInputSlotPositions = new ArrayList<>();
@@ -163,15 +224,20 @@ public class LogiFlashParser {
         }
     }
 
-    private void addWire(int x1, int y1, int x2, int y2) {
-        LogiVector p1 = new LogiVector(x1, y1);
-        LogiVector p2 = new LogiVector(x2, y2);
+    private List<LogiSlot> getConnectedInputSlots(LogiVector pos) {
+        List<LogiSlot> connectedInputSlots = new ArrayList<>();
 
-        if (!wires.containsKey(p1)) {
-            wires.put(p1, new HashSet<LogiVector>());
+        for (LogiWire wire : wires) {
+            if (wire.contains(pos)) {
+                for (LogiVector point : wire.getPoints()) {
+                    if (inputs.containsKey(point)) {
+                        connectedInputSlots.add(inputs.get(point));
+                    }
+                }
+            }
         }
 
-        wires.get(p1).add(p2);
+        return connectedInputSlots;
     }
 
     private Document getDocument() throws IOException, SAXException, ParserConfigurationException {
@@ -180,17 +246,16 @@ public class LogiFlashParser {
         return db.parse(file);
     }
 
-    private Gate newElement(Class<? extends Gate> type, int numberOfInputs, int delay, String name) {
-        try {
-            return type.getConstructor(int.class, int.class, String.class).newInstance(numberOfInputs, delay, name);
-        } catch (Exception e) {
-            throw new InvalidStatementException("Konnte kein Element vom Typ " + type + " erstellen");
-        }
-    }
-
     private String newGateName() {
         String name = "g" + gateCounter;
         gateCounter++;
+
+        return name;
+    }
+
+    private String newSignalName() {
+        String name = "i" + signalCounter;
+        signalCounter++;
 
         return name;
     }

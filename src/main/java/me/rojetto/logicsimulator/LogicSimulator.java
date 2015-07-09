@@ -1,13 +1,12 @@
 package me.rojetto.logicsimulator;
 
 import me.rojetto.logicsimulator.core.*;
-import me.rojetto.logicsimulator.files.CirParser;
-import me.rojetto.logicsimulator.files.DiagramCreator;
-import me.rojetto.logicsimulator.files.ErgCreator;
-import me.rojetto.logicsimulator.files.EventParser;
+import me.rojetto.logicsimulator.files.*;
 import me.rojetto.logicsimulator.ui.SimulatorWindow;
+import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,18 +17,22 @@ public class LogicSimulator {
     private final EventQueue queue;
     private Circuit circuit;
 
-    public LogicSimulator(File circuitFile, File eventFile) throws IOException {
+    public LogicSimulator(File circuitFile, File eventFile) throws IOException, ParserConfigurationException, SAXException {
         queue = new EventQueue();
-        circuit = null;
         Event.setEventQueue(queue);
 
-        String circuitString = readFileContent(circuitFile);
-        circuit = CirParser.parse(circuitString);
+        if (circuitFile.getName().matches(".*\\.xml")) {
+            LogiFlashParser parser = new LogiFlashParser(circuitFile);
+            circuit = parser.parse();
+        } else {
+            String circuitString = readFileContent(circuitFile);
+            circuit = CirParser.parse(circuitString);
+        }
         String eventString = readFileContent(eventFile);
         EventParser.parse(eventString, circuit);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
         if (args.length > 0) {
             if (args.length != 4) {
                 System.out.println("Unzureichende Parameter.");
