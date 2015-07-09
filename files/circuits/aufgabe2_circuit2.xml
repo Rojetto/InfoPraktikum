@@ -1,104 +1,37 @@
-<gateml stepMode="no" allowStep="no" y="185.10989010989" x="157.197802197802" zoom="0.582417582417582" oncolor="ffcc00">
+<gateml stepMode="no" allowStep="no" y="101.263736263736" x="208.846153846154" zoom="1" oncolor="ffcc00">
     <components/>
     <gates>
-        <gate type="FF_D" rot="90" ins="00" outs="00" edge="yes" x="240" y="310"/>
-        <gate type="FF_D" rot="90" ins="00" outs="00" edge="yes" x="360" y="310"/>
-        <gate type="FF_D" rot="90" ins="00" outs="00" edge="yes" x="480" y="310"/>
-        <gate type="FF_D" rot="90" ins="00" outs="00" edge="yes" x="600" y="310"/>
-        <gate type="And" rot="90" ins="00" outs="0" x="270" y="130"/>
-        <gate type="And" rot="90" ins="00" outs="0" x="390" y="130"/>
-        <gate type="And" rot="90" ins="00" outs="0" x="510" y="130"/>
-        <gate type="And" rot="90" ins="00" outs="0" x="630" y="130"/>
-        <gate type="Xor" rot="90" ins="00" outs="0" x="290" y="10"/>
-        <gate type="Xor" rot="90" ins="00" outs="0" x="410" y="10"/>
-        <gate type="Xor" rot="90" ins="00" outs="0" x="530" y="10"/>
-        <gate type="One" rot="90" ins="0" outs="1" x="650" y="10"/>
-        <gate type="One" rot="0" ins="0" outs="1" x="50" y="80"/>
-        <gate type="And" rot="90" ins="000" outs="0" x="270" y="-110"/>
-        <gate type="And" rot="90" ins="00" outs="0" x="390" y="-110"/>
+        <gate type="And" rot="0" ins="00" outs="1" x="0" y="0"/>
+        <gate type="And" rot="0" ins="000" outs="1" x="0" y="100"/>
+        <gate type="And" rot="90" ins="00000000" outs="1" x="230" y="150"/>
+        <gate type="Or" rot="0" ins="00" outs="0" x="280" y="20"/>
+        <gate type="Or" rot="90" ins="00000000" outs="0" x="80" y="300"/>
     </gates>
     <sources>
-        <source type="button" x="-80" y="80" scale="1"/>
-        <source type="button" x="-80" y="200" scale="1"/>
+        <source type="button" x="-30" y="180" scale="1"/>
     </sources>
-    <drains>
-        <drain type="lamp" x="270" y="470" scale="1"/>
-        <drain type="lamp" x="390" y="470" scale="1"/>
-        <drain type="lamp" x="510" y="470" scale="1"/>
-        <drain type="lamp" x="630" y="470" scale="1"/>
-    </drains>
+    <drains/>
     <wires>
-        <wire righty="230" rightx="270" lefty="160" leftx="270"/>
-        <wire righty="230" rightx="390" lefty="160" leftx="390"/>
-        <wire righty="230" rightx="510" lefty="160" leftx="510"/>
-        <wire righty="230" rightx="630" lefty="160" leftx="630"/>
-        <wire righty="80" rightx="20" lefty="80" leftx="-60"/>
-        <wire righty="80" rightx="610" lefty="80" leftx="490"/>
-        <wire righty="100" rightx="610" lefty="80" leftx="610"/>
-        <wire righty="80" rightx="250" lefty="80" leftx="100"/>
-        <wire righty="100" rightx="250" lefty="80" leftx="250"/>
-        <wire righty="80" rightx="370" lefty="80" leftx="250"/>
-        <wire righty="100" rightx="370" lefty="80" leftx="370"/>
-        <wire righty="80" rightx="490" lefty="80" leftx="370"/>
-        <wire righty="100" rightx="490" lefty="80" leftx="490"/>
-        <wire righty="100" rightx="290" lefty="40" leftx="290"/>
-        <wire righty="100" rightx="410" lefty="40" leftx="410"/>
-        <wire righty="100" rightx="530" lefty="40" leftx="530"/>
-        <wire righty="100" rightx="650" lefty="60" leftx="650"/>
-        <wire righty="200" rightx="600" lefty="230" leftx="600"/>
-        <wire righty="200" rightx="10" lefty="200" leftx="240"/>
-        <wire righty="200" rightx="-60" lefty="200" leftx="10"/>
-        <wire righty="200" rightx="240" lefty="200" leftx="360"/>
-        <wire righty="230" rightx="240" lefty="200" leftx="240"/>
-        <wire righty="200" rightx="360" lefty="200" leftx="480"/>
-        <wire righty="230" rightx="360" lefty="200" leftx="360"/>
-        <wire righty="200" rightx="480" lefty="200" leftx="600"/>
-        <wire righty="230" rightx="480" lefty="200" leftx="480"/>
-        <wire righty="-20" rightx="270" lefty="-80" leftx="270"/>
-        <wire righty="-20" rightx="390" lefty="-80" leftx="390"/>
-        <wire righty="450" rightx="270" lefty="420" leftx="270"/>
-        <wire righty="450" rightx="390" lefty="420" leftx="390"/>
-        <wire righty="450" rightx="510" lefty="420" leftx="510"/>
-        <wire righty="450" rightx="630" lefty="420" leftx="630"/>
-        <wire righty="420" rightx="270" lefty="390" leftx="270"/>
-        <wire righty="420" rightx="270" lefty="420" leftx="270"/>
-        <wire righty="420" rightx="350" lefty="420" leftx="270"/>
-        <wire righty="-40" rightx="350" lefty="420" leftx="350"/>
-        <wire righty="-40" rightx="310" lefty="-40" leftx="350"/>
-        <wire righty="-20" rightx="310" lefty="-40" leftx="310"/>
-        <wire righty="-40" rightx="430" lefty="-20" leftx="430"/>
-        <wire righty="-40" rightx="470" lefty="-40" leftx="430"/>
-        <wire righty="420" rightx="470" lefty="-40" leftx="470"/>
-        <wire righty="420" rightx="420" lefty="420" leftx="470"/>
-        <wire righty="420" rightx="390" lefty="390" leftx="390"/>
-        <wire righty="420" rightx="420" lefty="420" leftx="390"/>
-        <wire righty="420" rightx="510" lefty="390" leftx="510"/>
-        <wire righty="420" rightx="550" lefty="420" leftx="510"/>
-        <wire righty="420" rightx="590" lefty="420" leftx="550"/>
-        <wire righty="-40" rightx="590" lefty="420" leftx="590"/>
-        <wire righty="-40" rightx="550" lefty="-40" leftx="590"/>
-        <wire righty="-20" rightx="550" lefty="-40" leftx="550"/>
-        <wire righty="420" rightx="630" lefty="390" leftx="630"/>
-        <wire righty="420" rightx="700" lefty="420" leftx="630"/>
-        <wire righty="-40" rightx="700" lefty="420" leftx="700"/>
-        <wire righty="-40" rightx="650" lefty="-40" leftx="700"/>
-        <wire righty="-20" rightx="650" lefty="-40" leftx="650"/>
-        <wire righty="-90" rightx="700" lefty="-40" leftx="700"/>
-        <wire righty="-90" rightx="510" lefty="-90" leftx="700"/>
-        <wire righty="-20" rightx="510" lefty="-90" leftx="510"/>
-        <wire righty="-150" rightx="470" lefty="-40" leftx="470"/>
-        <wire righty="-150" rightx="300" lefty="-150" leftx="470"/>
-        <wire righty="-140" rightx="300" lefty="-150" leftx="300"/>
-        <wire righty="-180" rightx="590" lefty="-40" leftx="590"/>
-        <wire righty="-180" rightx="410" lefty="-180" leftx="590"/>
-        <wire righty="-140" rightx="410" lefty="-180" leftx="410"/>
-        <wire righty="-180" rightx="270" lefty="-180" leftx="410"/>
-        <wire righty="-140" rightx="270" lefty="-180" leftx="270"/>
-        <wire righty="-220" rightx="700" lefty="-90" leftx="700"/>
-        <wire righty="-220" rightx="370" lefty="-220" leftx="700"/>
-        <wire righty="-140" rightx="370" lefty="-220" leftx="370"/>
-        <wire righty="-220" rightx="240" lefty="-220" leftx="370"/>
-        <wire righty="-140" rightx="240" lefty="-220" leftx="240"/>
+        <wire righty="-20" rightx="-30" lefty="-20" leftx="-110"/>
+        <wire righty="20" rightx="-30" lefty="20" leftx="-110"/>
+        <wire righty="0" rightx="50" lefty="-20" leftx="180"/>
+        <wire righty="200" rightx="230" lefty="250" leftx="230"/>
+        <wire righty="330" rightx="80" lefty="230" leftx="290"/>
+        <wire righty="20" rightx="390" lefty="20" leftx="310"/>
+        <wire righty="180" rightx="40" lefty="0" leftx="250"/>
+        <wire righty="260" rightx="420" lefty="210" leftx="380"/>
+        <wire righty="230" rightx="290" lefty="290" leftx="310"/>
+        <wire righty="350" rightx="290" lefty="260" leftx="420"/>
+        <wire righty="300" rightx="240" lefty="370" leftx="220"/>
+        <wire righty="290" rightx="310" lefty="300" leftx="240"/>
+        <wire righty="370" rightx="220" lefty="330" leftx="270"/>
+        <wire righty="330" rightx="270" lefty="350" leftx="290"/>
+        <wire righty="400" rightx="280" lefty="330" leftx="270"/>
+        <wire righty="360" rightx="410" lefty="400" leftx="280"/>
+        <wire righty="260" rightx="420" lefty="360" leftx="410"/>
+        <wire righty="230" rightx="440" lefty="260" leftx="420"/>
+        <wire righty="200" rightx="-30" lefty="270" leftx="-60"/>
+        <wire righty="200" rightx="-30" lefty="200" leftx="-30"/>
     </wires>
     <texts/>
 </gateml>
