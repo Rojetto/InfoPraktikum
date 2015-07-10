@@ -1,9 +1,9 @@
 package me.rojetto.logicsimulator.files;
 
+import me.rojetto.logicsimulator.LogicSimulatorException;
 import me.rojetto.logicsimulator.core.Circuit;
 import me.rojetto.logicsimulator.core.Event;
 import me.rojetto.logicsimulator.core.Signal;
-import me.rojetto.logicsimulator.exception.InvalidStatementException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class EventParser {
     private static final Pattern linePattern = Pattern.compile("\\s*(\\d+)\\s+([a-zA-Z0-9]+)\\s+([01])\\s*");
 
-    public static void parse(String content, Circuit circuit) {
+    public static void parse(String content, Circuit circuit) throws LogicSimulatorException {
         content = content.replaceAll("#.*", "");
 
         while (firstLine(content) != null) {
@@ -25,7 +25,7 @@ public class EventParser {
                 Signal signal = circuit.getSignal(signalName);
 
                 if (signal == null) {
-                    throw new InvalidStatementException("Signal " + signalName + " existiert nicht");
+                    throw new LogicSimulatorException("Signal " + signalName + " existiert nicht");
                 }
 
                 new Event(signal, time, value);

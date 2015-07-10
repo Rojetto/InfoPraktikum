@@ -1,5 +1,6 @@
 package me.rojetto.logicsimulator.files;
 
+import me.rojetto.logicsimulator.LogicSimulatorException;
 import me.rojetto.logicsimulator.core.Circuit;
 import me.rojetto.logicsimulator.core.Gate;
 import me.rojetto.logicsimulator.core.Signal;
@@ -40,124 +41,128 @@ public class LogiFlashParser {
         this.inputSlots = new HashMap<>();
     }
 
-    public Circuit parse() throws ParserConfigurationException, IOException, SAXException {
-        Circuit circuit = new Circuit();
-        Document dom = getDocument();
+    public Circuit parse() throws IOException, LogicSimulatorException {
+        try {
+            Circuit circuit = new Circuit();
+            Document dom = getDocument();
 
-        NodeList wireNodes = dom.getElementsByTagName("wire");
-        List<LogiWireSegment> segments = new ArrayList<>();
-        for (int i = 0; i < wireNodes.getLength(); i++) {
-            Element node = (Element) wireNodes.item(i);
-            LogiVector p1 = new LogiVector(Integer.parseInt(node.getAttribute("rightx")),
-                    Integer.parseInt(node.getAttribute("righty")));
-            LogiVector p2 = new LogiVector(Integer.parseInt(node.getAttribute("leftx")),
-                    Integer.parseInt(node.getAttribute("lefty")));
+            NodeList wireNodes = dom.getElementsByTagName("wire");
+            List<LogiWireSegment> segments = new ArrayList<>();
+            for (int i = 0; i < wireNodes.getLength(); i++) {
+                Element node = (Element) wireNodes.item(i);
+                LogiVector p1 = new LogiVector(Integer.parseInt(node.getAttribute("rightx")),
+                        Integer.parseInt(node.getAttribute("righty")));
+                LogiVector p2 = new LogiVector(Integer.parseInt(node.getAttribute("leftx")),
+                        Integer.parseInt(node.getAttribute("lefty")));
 
-            segments.add(new LogiWireSegment(p1, p2));
-        }
+                segments.add(new LogiWireSegment(p1, p2));
+            }
 
-        while (segments.size() > 0) {
-            Iterator<LogiWireSegment> it = segments.iterator();
-            int howManyRemoved = 0;
-            while (it.hasNext()) {
-                LogiWireSegment s = it.next();
+            while (segments.size() > 0) {
+                Iterator<LogiWireSegment> it = segments.iterator();
+                int howManyRemoved = 0;
+                while (it.hasNext()) {
+                    LogiWireSegment s = it.next();
 
-                for (LogiWire wire : wires) {
-                    if (wire.segmentFits(s)) {
-                        wire.addSegment(s);
-                        it.remove();
-                        howManyRemoved++;
+                    for (LogiWire wire : wires) {
+                        if (wire.segmentFits(s)) {
+                            wire.addSegment(s);
+                            it.remove();
+                            howManyRemoved++;
+                        }
+                    }
+                }
+
+                if (segments.size() > 0 && howManyRemoved == 0) {
+                    LogiWire newWire = new LogiWire();
+                    newWire.addSegment(segments.remove(0));
+                    wires.add(newWire);
+                }
+            }
+
+            NodeList gateNodes = dom.getElementsByTagName("gate");
+            for (int i = 0; i < gateNodes.getLength(); i++) {
+                Element node = (Element) gateNodes.item(i);
+                Gate gate = fromNode(node);
+                circuit.addGate(gate);
+                addSlots(node, gate);
+            }
+
+            NodeList sourceNodes = dom.getElementsByTagName("source");
+            for (int i = 0; i < sourceNodes.getLength(); i++) {
+                Element node = (Element) sourceNodes.item(i);
+                Gate inDelay = new Buf(1, STANDARD_DELAY, newGateName());
+                circuit.addGate(inDelay);
+                Signal inSignal = new Signal("in" + (i + 1));
+                inDelay.connectSignal("i1", inSignal);
+                circuit.addInput(inSignal);
+
+                LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
+                for (int j = 0; j < 4; j++) {
+                    LogiSlot outSlot = new LogiSlot(inDelay, "o", false);
+                    LogiVector outPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
+                    outputSlots.put(outPos, outSlot);
+                }
+            }
+
+            NodeList drainNodes = dom.getElementsByTagName("drain");
+            for (int i = 0; i < drainNodes.getLength(); i++) {
+                Element node = (Element) drainNodes.item(i);
+                Gate outDelay = new Buf(1, STANDARD_DELAY, newGateName());
+                circuit.addGate(outDelay);
+                Signal outSignal = new Signal("o" + (i + 1));
+                outDelay.connectSignal("o", outSignal);
+                circuit.addOutput(outSignal);
+
+                LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
+                for (int j = 0; j < 4; j++) {
+                    LogiSlot inSlot = new LogiSlot(outDelay, "i1", false);
+                    LogiVector inPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
+                    inputSlots.put(inPos, inSlot);
+                }
+            }
+
+            for (LogiVector outputPos : outputSlots.keySet()) {
+                LogiSlot slot = outputSlots.get(outputPos);
+                List<LogiSlot> connectedInputSlots = getConnectedInputSlots(outputPos);
+                if (connectedInputSlots.size() == 0) {
+                    continue;
+                }
+
+                Gate gate = slot.getGate();
+                Signal newSignal = new Signal(newSignalName());
+                circuit.addSignal(newSignal);
+                if (!outputSlots.get(outputPos).isInverted()) {
+                    gate.connectSignal(slot.getSlot(), newSignal);
+                } else {
+                    Gate notOutput = new Not(1, STANDARD_DELAY, newGateName());
+                    circuit.addGate(notOutput);
+                    Signal signalBetween = new Signal(newSignalName());
+                    circuit.addSignal(signalBetween);
+                    gate.connectSignal(slot.getSlot(), signalBetween);
+                    notOutput.connectSignal("i1", signalBetween);
+                    notOutput.connectSignal("o", newSignal);
+                }
+
+                for (LogiSlot connectedInputSlot : connectedInputSlots) {
+                    if (!connectedInputSlot.isInverted()) {
+                        connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), newSignal);
+                    } else {
+                        Gate notInput = new Not(1, STANDARD_DELAY, newGateName());
+                        circuit.addGate(notInput);
+                        Signal signalBetween = new Signal(newSignalName());
+                        circuit.addSignal(signalBetween);
+                        notInput.connectSignal("i1", newSignal);
+                        notInput.connectSignal("o", signalBetween);
+                        connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), signalBetween);
                     }
                 }
             }
 
-            if (segments.size() > 0 && howManyRemoved == 0) {
-                LogiWire newWire = new LogiWire();
-                newWire.addSegment(segments.remove(0));
-                wires.add(newWire);
-            }
+            return circuit;
+        } catch (SAXException | ParserConfigurationException e) {
+            throw new LogicSimulatorException("Konvertieren der XML-Datei fehlgeschlagen");
         }
-
-        NodeList gateNodes = dom.getElementsByTagName("gate");
-        for (int i = 0; i < gateNodes.getLength(); i++) {
-            Element node = (Element) gateNodes.item(i);
-            Gate gate = fromNode(node);
-            circuit.addGate(gate);
-            addSlots(node, gate);
-        }
-
-        NodeList sourceNodes = dom.getElementsByTagName("source");
-        for (int i = 0; i < sourceNodes.getLength(); i++) {
-            Element node = (Element) sourceNodes.item(i);
-            Gate inDelay = new Buf(1, STANDARD_DELAY, newGateName());
-            circuit.addGate(inDelay);
-            Signal inSignal = new Signal("in" + (i + 1));
-            inDelay.connectSignal("i1", inSignal);
-            circuit.addInput(inSignal);
-
-            LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
-            for (int j = 0; j < 4; j++) {
-                LogiSlot outSlot = new LogiSlot(inDelay, "o", false);
-                LogiVector outPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
-                outputSlots.put(outPos, outSlot);
-            }
-        }
-
-        NodeList drainNodes = dom.getElementsByTagName("drain");
-        for (int i = 0; i < drainNodes.getLength(); i++) {
-            Element node = (Element) drainNodes.item(i);
-            Gate outDelay = new Buf(1, STANDARD_DELAY, newGateName());
-            circuit.addGate(outDelay);
-            Signal outSignal = new Signal("o" + (i + 1));
-            outDelay.connectSignal("o", outSignal);
-            circuit.addOutput(outSignal);
-
-            LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
-            for (int j = 0; j < 4; j++) {
-                LogiSlot inSlot = new LogiSlot(outDelay, "i1", false);
-                LogiVector inPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
-                inputSlots.put(inPos, inSlot);
-            }
-        }
-
-        for (LogiVector outputPos : outputSlots.keySet()) {
-            LogiSlot slot = outputSlots.get(outputPos);
-            List<LogiSlot> connectedInputSlots = getConnectedInputSlots(outputPos);
-            if (connectedInputSlots.size() == 0) {
-                continue;
-            }
-
-            Gate gate = slot.getGate();
-            Signal newSignal = new Signal(newSignalName());
-            circuit.addSignal(newSignal);
-            if (!outputSlots.get(outputPos).isInverted()) {
-                gate.connectSignal(slot.getSlot(), newSignal);
-            } else {
-                Gate notOutput = new Not(1, STANDARD_DELAY, newGateName());
-                circuit.addGate(notOutput);
-                Signal signalBetween = new Signal(newSignalName());
-                circuit.addSignal(signalBetween);
-                gate.connectSignal(slot.getSlot(), signalBetween);
-                notOutput.connectSignal("i1", signalBetween);
-                notOutput.connectSignal("o", newSignal);
-            }
-
-            for (LogiSlot connectedInputSlot : connectedInputSlots) {
-                if (!connectedInputSlot.isInverted()) {
-                    connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), newSignal);
-                } else {
-                    Gate notInput = new Not(1, STANDARD_DELAY, newGateName());
-                    circuit.addGate(notInput);
-                    Signal signalBetween = new Signal(newSignalName());
-                    circuit.addSignal(signalBetween);
-                    notInput.connectSignal("i1", newSignal);
-                    notInput.connectSignal("o", signalBetween);
-                    connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), signalBetween);
-                }
-            }
-        }
-
-        return circuit;
     }
 
     private Gate fromNode(Element node) {

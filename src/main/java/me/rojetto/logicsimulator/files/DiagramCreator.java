@@ -1,7 +1,7 @@
 package me.rojetto.logicsimulator.files;
 
-import me.rojetto.logicsimulator.core.Keyframe;
 import me.rojetto.logicsimulator.core.Signal;
+import me.rojetto.logicsimulator.core.SignalState;
 import me.rojetto.logicsimulator.core.SimulationResult;
 
 import java.awt.*;
@@ -18,7 +18,7 @@ public class DiagramCreator {
     public static BufferedImage create(SimulationResult result) {
         int timeLineLength = result.lastFrame().getTime() + 10;
         List<Signal> signals = result.getSignals();
-        List<Keyframe> frames = result.getKeyframes();
+        List<SignalState> frames = result.getSignalStates();
         BufferedImage image = new BufferedImage(hOffset + timeLineLength + 20, signals.size() * lineHeight + vOffset, BufferedImage.TYPE_INT_RGB);
         Graphics2D graph = image.createGraphics();
         graph.setColor(Color.white);
@@ -42,14 +42,14 @@ public class DiagramCreator {
                 graph.drawString(i + "", i + hOffset, vOffset - 2);
             }
         }
-        Keyframe lastFrame = result.firstFrame();
+        SignalState lastFrame = result.firstFrame();
 
         frames.remove(0);
         int lastX = hOffset;
         graph.setColor(Color.BLACK);
 
         while (frames.size() > 0) {
-            Keyframe currentFrame = frames.remove(0);
+            SignalState currentFrame = frames.remove(0);
             int time = currentFrame.getTime();
             int currentX = time + hOffset;
             y = vOffset;

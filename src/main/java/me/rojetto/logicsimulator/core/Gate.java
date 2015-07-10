@@ -1,12 +1,15 @@
 package me.rojetto.logicsimulator.core;
 
-import me.rojetto.logicsimulator.exception.InvalidConnectionException;
+import me.rojetto.logicsimulator.LogicSimulatorException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstrakte Superklasse für alle Logikgatter der Schaltung.
+ */
 public abstract class Gate {
     private final Map<String, Signal> inputs;
     private final int numberOfInputs;
@@ -16,6 +19,11 @@ public abstract class Gate {
     private Map<String, Boolean> lastOutputs;
     private boolean isFirstCalculation;
 
+    /**
+     * @param numberOfInputs Anzahl der Eingänge
+     * @param delay          Berechnungsdauer des Gatters
+     * @param name           Name des Gatters
+     */
     public Gate(int numberOfInputs, int delay, String name) {
         this.inputs = new HashMap<>();
         this.numberOfInputs = numberOfInputs;
@@ -30,24 +38,45 @@ public abstract class Gate {
         return name;
     }
 
+    /**
+     * @param slot Name des Eingangsanschlusses
+     * @param signal Anliegendes Signal
+     */
     public void setInput(String slot, Signal signal) {
         inputs.put(slot, signal);
 
         signal.addOutput(this);
     }
 
-    public void setOutput(String slot, Signal output) {
-        outputs.put(slot, output);
+    /**
+     * @param slot   Name des Ausgangsanschlusses
+     * @param signal Anliegendes Signal
+     */
+    public void setOutput(String slot, Signal signal) {
+        outputs.put(slot, signal);
     }
 
+    /**
+     * Propagiert Ergebnis bei Änderung zeitunabhängig direkt an anliegende Signale
+     */
     public void update() {
         propagateCalculations(calculateOutput(getInputValues()), false, 0);
     }
 
+    /**
+     * Propagiert Ergebnis bei Änderung zeitabhängig an anliegende Signale
+     * @param time Zeit, zu der sich Eingänge geändert haben
+     */
     public void timedUpdate(int time) {
         propagateCalculations(calculateOutput(getInputValues()), true, time);
     }
 
+    /**
+     * Gibt berechnete Werte an Ausgangssignale weiter
+     * @param values Ausgangsanschlussnamen und jeweilige Werte
+     * @param timed Events erzeugen oder direkt propagieren
+     * @param time Zeit, zu der sich Eingänge geändert haben
+     */
     private void propagateCalculations(Map<String, Boolean> values, boolean timed, int time) {
         List<Signal> signalsToUpdate = new ArrayList<>();
 
@@ -70,6 +99,9 @@ public abstract class Gate {
         }
     }
 
+    /**
+     * @return Eingangsanschlussnamen und jeweilige aktuelle Werte
+     */
     private Map<String, Boolean> getInputValues() {
         Map<String, Boolean> inputValues = new HashMap<>();
 
@@ -80,7 +112,14 @@ public abstract class Gate {
         return inputValues;
     }
 
-    public void connectSignal(String slot, Signal signal) throws InvalidConnectionException {
+    /**
+     * Verbindet Signal mit jeweiligem Eingang oder Ausgang
+     *
+     * @param slot   Name des Anschlusses
+     * @param signal Signal, das angeschlossen werden soll
+     * @throws LogicSimulatorException Wenn Anschluss nicht existiert
+     */
+    public void connectSignal(String slot, Signal signal) throws LogicSimulatorException {
         boolean connected = false;
 
         if (stringMatchesRegexArray(inputNames(), slot)) {
@@ -92,11 +131,16 @@ public abstract class Gate {
         }
 
         if (!connected) {
-            throw new InvalidConnectionException("Der Slot " + slot + " existiert bei Gattern vom Typ " +
+            throw new LogicSimulatorException("Der Slot " + slot + " existiert bei Gattern vom Typ " +
                     getClass().getName() + " nicht");
         }
     }
 
+    /**
+     * Hilfsmethode um zu überprüfen ob String auf mindestens eine aus einer Liste von Regex's passt
+     * @param array Array von Regular Expressions
+     * @param s String, der überprüft werden soll
+     */
     private boolean stringMatchesRegexArray(String[] array, String s) {
         for (int i = 0; i < array.length; i++) {
             if (s.matches(array[i])) {
@@ -107,6 +151,9 @@ public abstract class Gate {
         return false;
     }
 
+    /**
+     * @return Name des Anschlusses, an den Signal angeschlossen ist, <code>null</code>, wenn nicht angeschlossen
+     */
     private String getSignalSlot(Signal signal) {
         for (String slot : inputs.keySet()) {
             if (inputs.get(slot) == signal) {
@@ -123,6 +170,9 @@ public abstract class Gate {
         return null;
     }
 
+    /**
+     * @return Anschlussnamen und jeweilige angeschlossene Signale
+     */
     public Map<String, Signal> getSlots() {
         Map<String, Signal> slots = new HashMap<>();
         slots.putAll(inputs);
@@ -144,7 +194,19 @@ public abstract class Gate {
         return getClass().getName() + " " + name + ": Inputs=" + numberOfInputs + " Delay=" + delay;
     }
 
+    /**
+     * @return Array von Regular Expressions auf die Eingangsnamen des Gatters passen
+     */
     protected abstract String[] inputNames();
+
+    /**
+     * @return Array von Regular Expressions auf die Ausgangsnamen des Gatters passen
+     */
     protected abstract String[] outputNames();
+
+    /**
+     * @param inputValues Anschlussnamen und jeweilige anliegende Werte
+     * @return Ausgangsanschlussnamen und jeweilige berechnete Werte
+     */
     protected abstract Map<String, Boolean> calculateOutput(Map<String, Boolean> inputValues);
 }

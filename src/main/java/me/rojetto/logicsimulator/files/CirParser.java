@@ -1,9 +1,9 @@
 package me.rojetto.logicsimulator.files;
 
+import me.rojetto.logicsimulator.LogicSimulatorException;
 import me.rojetto.logicsimulator.core.Circuit;
 import me.rojetto.logicsimulator.core.Gate;
 import me.rojetto.logicsimulator.core.Signal;
-import me.rojetto.logicsimulator.exception.InvalidStatementException;
 import me.rojetto.logicsimulator.gate.*;
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class CirParser {
         SIGNAL, GATE, CONNECTION
     }
 
-    public static Circuit parse(String content) {
+    public static Circuit parse(String content) throws LogicSimulatorException {
         Circuit circuit = new Circuit();
 
         content = content.replaceAll("#.+", "");
@@ -45,7 +45,7 @@ public class CirParser {
         while (statement != null) {
             Pattern p = identifyPattern(statement);
             if (p == null) {
-                throw new InvalidStatementException("Fehler in Kommando: " + statement);
+                throw new LogicSimulatorException("Fehler in Kommando: " + statement);
             }
 
             Matcher m = p.matcher(statement);
@@ -93,11 +93,11 @@ public class CirParser {
                     Gate gate = circuit.getGate(gateName);
 
                     if (signal == null) {
-                        throw new InvalidStatementException("Signal " + signalName + " existiert nicht");
+                        throw new LogicSimulatorException("Signal " + signalName + " existiert nicht");
                     }
 
                     if (gate == null) {
-                        throw new InvalidStatementException("Gatter " + gateName + " existiert nicht");
+                        throw new LogicSimulatorException("Gatter " + gateName + " existiert nicht");
                     }
 
                     gate.connectSignal(slot, signal);
@@ -132,12 +132,12 @@ public class CirParser {
         return null;
     }
 
-    private static Gate newElement(String type, int numberOfInputs, int delay, String name) {
+    private static Gate newElement(String type, int numberOfInputs, int delay, String name) throws LogicSimulatorException {
         Class<? extends Gate> clazz = elementTypes.get(type);
         try {
             return clazz.getConstructor(int.class, int.class, String.class).newInstance(numberOfInputs, delay, name);
         } catch (Exception e) {
-            throw new InvalidStatementException("Konnte kein Element vom Typ " + type + " erstellen");
+            throw new LogicSimulatorException("Konnte kein Element vom Typ " + type + " erstellen");
         }
     }
 }

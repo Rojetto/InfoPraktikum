@@ -1,7 +1,7 @@
 package me.rojetto.logicsimulator.files;
 
-import me.rojetto.logicsimulator.core.Keyframe;
 import me.rojetto.logicsimulator.core.Signal;
+import me.rojetto.logicsimulator.core.SignalState;
 import me.rojetto.logicsimulator.core.SimulationResult;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ErgCreator {
         String s = String.format(headerFormat, names);
         s += "\n\n";
 
-        for (Keyframe frame : result.getKeyframes()) {
+        for (SignalState frame : result.getSignalStates()) {
             Object[] values = new Object[signals.size() + 1];
             values[0] = frame.getTime();
 
