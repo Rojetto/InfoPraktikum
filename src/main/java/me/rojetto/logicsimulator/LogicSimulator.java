@@ -33,13 +33,16 @@ public class LogicSimulator {
     }
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
-        if (args.length > 0) {
-            if (args.length != 4) {
-                System.out.println("Unzureichende Parameter.");
-                System.out.println("Format: [cirPfad] [eventsPfad] [ergPfad] [pngPfad]");
-                return;
-            }
+        if (args.length == 0) {
+            new SimulatorWindow();
+        } else if (args.length == 2) {
+            File xmlFile = new File(args[0]);
+            File cirFile = new File(args[1]);
 
+            Circuit c = new LogiFlashParser(xmlFile).parse();
+            String cirString = CirCreator.create(c);
+            System.out.println(cirString);
+        } else if (args.length == 4) {
             File circuitFile = new File(args[0]);
             File eventFile = new File(args[1]);
             File ergFile = new File(args[2]);
@@ -55,7 +58,10 @@ public class LogicSimulator {
 
             ImageIO.write(DiagramCreator.create(result), "PNG", graphFile);
         } else {
-            new SimulatorWindow();
+            System.out.println("Unzureichende Parameter. Moeglichkeiten:");
+            System.out.println("GUI: Keine Parameter");
+            System.out.println("Simulation: [in: schaltung] [in: events] [out: ergebnis] [out: diagramm]");
+            System.out.println("LogiFlash Converter: [in: xml] [out: cir]");
         }
     }
 

@@ -29,24 +29,32 @@ public class CirCreator {
         List<Signal> internalSignals = circuit.getSignals();
 
         for (Signal in : circuit.getInputs()) {
-            result += "Input " + in.getName() + ";\n";
             internalSignals.remove(in);
         }
 
+        if (circuit.getInputs().size() > 0) {
+            result += "Input " + listWithCommas(circuit.getInputs()) + ";\n";
+        }
+
         for (Signal out : circuit.getOutputs()) {
-            result += "Output " + out.getName() + ";\n";
             internalSignals.remove(out);
         }
 
-        for (Signal internal : internalSignals) {
-            result += "Signal " + internal.getName() + ";\n";
+        if (circuit.getOutputs().size() > 0) {
+            result += "Output " + listWithCommas(circuit.getOutputs()) + ";\n";
         }
+
+        result += "Signal " + listWithCommas(internalSignals) + ";\n";
 
         for (Gate gate : circuit.getGates()) {
             result += "Gate " + gate.getName() + " " + getGateTypeName(gate) + " Delay " + gate.getDelay() + ";\n";
         }
 
-        // TODO: Verbindungen schreiben
+        for (Gate gate : circuit.getGates()) {
+            for (String slot : gate.getSlots().keySet()) {
+                result += gate.getName() + "." + slot + " = " + gate.getSlots().get(slot).getName() + ";\n";
+            }
+        }
 
         return result;
     }
@@ -60,5 +68,18 @@ public class CirCreator {
         }
 
         return name;
+    }
+
+    private static String listWithCommas(List<Signal> signals) {
+        if (signals.size() == 0) {
+            return "";
+        }
+
+        String result = signals.remove(0).getName();
+        for (Signal next : signals) {
+            result += ", " + next.getName();
+        }
+
+        return result;
     }
 }

@@ -123,6 +123,14 @@ public abstract class Gate {
         return null;
     }
 
+    public Map<String, Signal> getSlots() {
+        Map<String, Signal> slots = new HashMap<>();
+        slots.putAll(inputs);
+        slots.putAll(outputs);
+
+        return slots;
+    }
+
     public int getNumberOfInputs() {
         return numberOfInputs;
     }
