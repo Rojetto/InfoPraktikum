@@ -127,6 +127,10 @@ public abstract class Gate {
         return numberOfInputs;
     }
 
+    public int getDelay() {
+        return delay;
+    }
+
     @Override
     public String toString() {
         return getClass().getName() + " " + name + ": Inputs=" + numberOfInputs + " Delay=" + delay;
