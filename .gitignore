@@ -2,3 +2,5 @@
 .idea/
 build/
 *.iml
+LogiFlash*/
+files/out/
