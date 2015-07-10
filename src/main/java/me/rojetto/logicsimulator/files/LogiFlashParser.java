@@ -242,17 +242,17 @@ public class LogiFlashParser {
         for (int i = 0; i < relativeInputSlotPositions.size(); i++) {
             if (newInputSlots.get(i).isInverted()) {
                 relativeInputSlotPositions.set(i, relativeInputSlotPositions.get(i).add(INPUT_NOT_OFFSET));
-            } else {
-                relativeInputSlotPositions.set(i, relativeInputSlotPositions.get(i).rotate(rotation / 180.0 * Math.PI));
             }
+
+            relativeInputSlotPositions.set(i, relativeInputSlotPositions.get(i).rotate(rotation / 180.0 * Math.PI));
         }
 
         for (int i = 0; i < relativeOutputSlotPositions.size(); i++) {
             if (newOutputSlots.get(i).isInverted()) {
                 relativeOutputSlotPositions.set(i, relativeOutputSlotPositions.get(i).add(OUTPUT_NOT_OFFSET));
-            } else {
-                relativeOutputSlotPositions.set(i, relativeOutputSlotPositions.get(i).rotate(rotation / 180.0 * Math.PI));
             }
+
+            relativeOutputSlotPositions.set(i, relativeOutputSlotPositions.get(i).rotate(rotation / 180.0 * Math.PI));
         }
 
         for (int i = 0; i < relativeInputSlotPositions.size(); i++) {
