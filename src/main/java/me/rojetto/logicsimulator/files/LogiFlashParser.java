@@ -22,6 +22,7 @@ public class LogiFlashParser {
 
     private static final LogiVector EVEN_INPUT_OFFSET = new LogiVector(0, -40);
     private static final LogiVector ODD_INPUT_OFFSET = new LogiVector(0, -30);
+    private static final LogiVector IN_OUT_OFFSET = new LogiVector(20, 0);
     private static final int STANDARD_DELAY = 1;
 
     private final File file;
@@ -83,6 +84,40 @@ public class LogiFlashParser {
             Gate gate = fromNode(node);
             circuit.addGate(gate);
             addSlots(node, gate);
+        }
+
+        NodeList sourceNodes = dom.getElementsByTagName("source");
+        for (int i = 0; i < sourceNodes.getLength(); i++) {
+            Element node = (Element) sourceNodes.item(i);
+            Gate inDelay = new Buf(1, STANDARD_DELAY, newGateName());
+            circuit.addGate(inDelay);
+            Signal inSignal = new Signal("in" + (i + 1));
+            inDelay.connectSignal("i1", inSignal);
+            circuit.addInput(inSignal);
+
+            LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
+            for (int j = 0; j < 4; j++) {
+                LogiSlot outSlot = new LogiSlot(inDelay, "o", false);
+                LogiVector outPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
+                outputs.put(outPos, outSlot);
+            }
+        }
+
+        NodeList drainNodes = dom.getElementsByTagName("drain");
+        for (int i = 0; i < drainNodes.getLength(); i++) {
+            Element node = (Element) drainNodes.item(i);
+            Gate outDelay = new Buf(1, STANDARD_DELAY, newGateName());
+            circuit.addGate(outDelay);
+            Signal outSignal = new Signal("o" + (i + 1));
+            outDelay.connectSignal("o", outSignal);
+            circuit.addOutput(outSignal);
+
+            LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
+            for (int j = 0; j < 4; j++) {
+                LogiSlot inSlot = new LogiSlot(outDelay, "i1", false);
+                LogiVector inPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
+                inputs.put(inPos, inSlot);
+            }
         }
 
         for (LogiVector outputPos : outputs.keySet()) {
