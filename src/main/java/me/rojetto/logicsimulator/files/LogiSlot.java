@@ -24,4 +24,9 @@ public class LogiSlot {
     public boolean isInverted() {
         return inverted;
     }
+
+    @Override
+    public String toString() {
+        return gate.getClass().getSimpleName() + " " + gate.getName() + ": " + (inverted ? "!" : "") + slot;
+    }
 }

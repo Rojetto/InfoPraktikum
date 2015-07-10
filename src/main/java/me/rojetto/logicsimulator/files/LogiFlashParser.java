@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class LogiFlashParser {
-    private static final LogiVector OUTPUT_NOT_OFFSET = new LogiVector(10, 0);
-    private static final LogiVector INPUT_NOT_OFFSET = new LogiVector(-10, 0);
+    private static final LogiVector OUTPUT_NOT_OFFSET = new LogiVector(20, 0);
+    private static final LogiVector INPUT_NOT_OFFSET = new LogiVector(-20, 0);
 
     private static final LogiVector EVEN_INPUT_OFFSET = new LogiVector(0, -40);
     private static final LogiVector ODD_INPUT_OFFSET = new LogiVector(0, -30);
@@ -197,8 +197,8 @@ public class LogiFlashParser {
         LogiVector pos = new LogiVector(Integer.parseInt(node.getAttribute("x")), Integer.parseInt(node.getAttribute("y")));
         List<LogiVector> relativeInputSlotPositions = new ArrayList<>();
         List<LogiVector> relativeOutputSlotPositions = new ArrayList<>();
-        List<LogiSlot> inputSlots = new ArrayList<>();
-        List<LogiSlot> outputSlots = new ArrayList<>();
+        List<LogiSlot> newInputSlots = new ArrayList<>();
+        List<LogiSlot> newOutputSlots = new ArrayList<>();
 
         if (gate instanceof And || gate instanceof Or || gate instanceof Exor || gate instanceof Buf) {
             LogiVector firstPosition = new LogiVector(-30, 0);
@@ -215,32 +215,32 @@ public class LogiFlashParser {
             for (int i = 0; i < gate.getNumberOfInputs(); i++) {
                 relativeInputSlotPositions.add(firstPosition.add(offset.mul(i)));
                 LogiSlot slot = new LogiSlot(gate, "i" + (i + 1), node.getAttribute("ins").charAt(i) == '1');
-                inputSlots.add(slot);
+                newInputSlots.add(slot);
             }
 
             relativeOutputSlotPositions.add(new LogiVector(30, 0));
-            outputSlots.add(new LogiSlot(gate, "o", node.getAttribute("outs").charAt(0) == '1'));
+            newOutputSlots.add(new LogiSlot(gate, "o", node.getAttribute("outs").charAt(0) == '1'));
         } else if (gate instanceof FF || gate instanceof Latch) {
             relativeInputSlotPositions.add(new LogiVector(-80, -30));
             relativeInputSlotPositions.add(new LogiVector(-80, 0));
 
-            inputSlots.add(new LogiSlot(gate, "d", node.getAttribute("ins").charAt(0) == '1'));
+            newInputSlots.add(new LogiSlot(gate, "d", node.getAttribute("ins").charAt(0) == '1'));
 
             if (gate instanceof FF) {
-                inputSlots.add(new LogiSlot(gate, "c", node.getAttribute("ins").charAt(1) == '1'));
+                newInputSlots.add(new LogiSlot(gate, "c", node.getAttribute("ins").charAt(1) == '1'));
             } else {
-                inputSlots.add(new LogiSlot(gate, "e", node.getAttribute("ins").charAt(1) == '1'));
+                newInputSlots.add(new LogiSlot(gate, "e", node.getAttribute("ins").charAt(1) == '1'));
             }
 
             relativeOutputSlotPositions.add(new LogiVector(80, -30));
             relativeOutputSlotPositions.add(new LogiVector(80, 30));
 
-            outputSlots.add(new LogiSlot(gate, "q", node.getAttribute("outs").charAt(0) == '1'));
-            outputSlots.add(new LogiSlot(gate, "nq", node.getAttribute("outs").charAt(1) == '1'));
+            newOutputSlots.add(new LogiSlot(gate, "q", node.getAttribute("outs").charAt(0) == '1'));
+            newOutputSlots.add(new LogiSlot(gate, "nq", node.getAttribute("outs").charAt(1) == '1'));
         }
 
         for (int i = 0; i < relativeInputSlotPositions.size(); i++) {
-            if (inputSlots.get(i).isInverted()) {
+            if (newInputSlots.get(i).isInverted()) {
                 relativeInputSlotPositions.set(i, relativeInputSlotPositions.get(i).add(INPUT_NOT_OFFSET));
             }
 
@@ -248,19 +248,19 @@ public class LogiFlashParser {
         }
 
         for (int i = 0; i < relativeOutputSlotPositions.size(); i++) {
-            if (outputSlots.get(i).isInverted()) {
+            if (newOutputSlots.get(i).isInverted()) {
                 relativeOutputSlotPositions.set(i, relativeOutputSlotPositions.get(i).add(OUTPUT_NOT_OFFSET));
+            } else {
+                relativeOutputSlotPositions.set(i, relativeOutputSlotPositions.get(i).rotate(rotation / 180.0 * Math.PI));
             }
-
-            relativeOutputSlotPositions.set(i, relativeOutputSlotPositions.get(i).rotate(rotation / 180.0 * Math.PI));
         }
 
         for (int i = 0; i < relativeInputSlotPositions.size(); i++) {
-            this.inputSlots.put(pos.add(relativeInputSlotPositions.get(i)), inputSlots.get(i));
+            this.inputSlots.put(pos.add(relativeInputSlotPositions.get(i)), newInputSlots.get(i));
         }
 
         for (int i = 0; i < relativeOutputSlotPositions.size(); i++) {
-            this.outputSlots.put(pos.add(relativeOutputSlotPositions.get(i)), outputSlots.get(i));
+            this.outputSlots.put(pos.add(relativeOutputSlotPositions.get(i)), newOutputSlots.get(i));
         }
     }
 
