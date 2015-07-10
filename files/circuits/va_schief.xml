@@ -1,0 +1,45 @@
+<gateml stepMode="no" allowStep="no" y="5.38461538461538" x="7.25274725274725" zoom="1" oncolor="ffcc00">
+    <components/>
+    <gates>
+        <gate type="And" rot="90" ins="00" outs="0" x="280" y="110"/>
+        <gate type="And" rot="90" ins="00" outs="0" x="410" y="270"/>
+        <gate type="Xor" rot="180" ins="00" outs="0" x="260" y="280"/>
+        <gate type="Xor" rot="-90" ins="00" outs="0" x="480" y="430"/>
+        <gate type="Or" rot="0" ins="00" outs="0" x="560" y="140"/>
+    </gates>
+    <sources>
+        <source type="button" x="90" y="130" scale="1"/>
+        <source type="button" x="70" y="300" scale="1"/>
+        <source type="button" x="80" y="400" scale="1"/>
+    </sources>
+    <drains>
+        <drain type="lamp" x="690" y="130" scale="1"/>
+        <drain type="lamp" x="660" y="430" scale="1"/>
+    </drains>
+    <wires>
+        <wire righty="130" rightx="110" lefty="130" leftx="160"/>
+        <wire righty="130" rightx="160" lefty="260" leftx="160"/>
+        <wire righty="260" rightx="160" lefty="300" leftx="290"/>
+        <wire righty="130" rightx="160" lefty="90" leftx="160"/>
+        <wire righty="90" rightx="160" lefty="80" leftx="300"/>
+        <wire righty="300" rightx="190" lefty="260" leftx="290"/>
+        <wire righty="300" rightx="90" lefty="300" leftx="190"/>
+        <wire righty="300" rightx="190" lefty="130" leftx="190"/>
+        <wire righty="130" rightx="190" lefty="80" leftx="260"/>
+        <wire righty="140" rightx="280" lefty="120" leftx="530"/>
+        <wire righty="300" rightx="410" lefty="270" leftx="490"/>
+        <wire righty="270" rightx="490" lefty="160" leftx="490"/>
+        <wire righty="160" rightx="490" lefty="160" leftx="530"/>
+        <wire righty="270" rightx="330" lefty="240" leftx="430"/>
+        <wire righty="280" rightx="230" lefty="270" leftx="330"/>
+        <wire righty="270" rightx="330" lefty="410" leftx="340"/>
+        <wire righty="410" rightx="340" lefty="460" leftx="460"/>
+        <wire righty="440" rightx="370" lefty="460" leftx="500"/>
+        <wire righty="400" rightx="100" lefty="440" leftx="370"/>
+        <wire righty="440" rightx="370" lefty="300" leftx="360"/>
+        <wire righty="300" rightx="360" lefty="240" leftx="390"/>
+        <wire righty="400" rightx="480" lefty="430" leftx="640"/>
+        <wire righty="140" rightx="590" lefty="130" leftx="670"/>
+    </wires>
+    <texts/>
+</gateml>

@@ -27,8 +27,8 @@ public class LogiFlashParser {
 
     private final File file;
     private final List<LogiWire> wires;
-    private final Map<LogiVector, LogiSlot> outputs;
-    private final Map<LogiVector, LogiSlot> inputs;
+    private final Map<LogiVector, LogiSlot> outputSlots;
+    private final Map<LogiVector, LogiSlot> inputSlots;
 
     private int gateCounter = 0;
     private int signalCounter = 0;
@@ -36,8 +36,8 @@ public class LogiFlashParser {
     public LogiFlashParser(File file) {
         this.file = file;
         this.wires = new ArrayList<>();
-        this.outputs = new HashMap<>();
-        this.inputs = new HashMap<>();
+        this.outputSlots = new HashMap<>();
+        this.inputSlots = new HashMap<>();
     }
 
     public Circuit parse() throws ParserConfigurationException, IOException, SAXException {
@@ -99,7 +99,7 @@ public class LogiFlashParser {
             for (int j = 0; j < 4; j++) {
                 LogiSlot outSlot = new LogiSlot(inDelay, "o", false);
                 LogiVector outPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
-                outputs.put(outPos, outSlot);
+                outputSlots.put(outPos, outSlot);
             }
         }
 
@@ -116,16 +116,21 @@ public class LogiFlashParser {
             for (int j = 0; j < 4; j++) {
                 LogiSlot inSlot = new LogiSlot(outDelay, "i1", false);
                 LogiVector inPos = pos.add(IN_OUT_OFFSET.rotate(j * Math.PI / 2));
-                inputs.put(inPos, inSlot);
+                inputSlots.put(inPos, inSlot);
             }
         }
 
-        for (LogiVector outputPos : outputs.keySet()) {
-            LogiSlot slot = outputs.get(outputPos);
+        for (LogiVector outputPos : outputSlots.keySet()) {
+            LogiSlot slot = outputSlots.get(outputPos);
+            List<LogiSlot> connectedInputSlots = getConnectedInputSlots(outputPos);
+            if (connectedInputSlots.size() == 0) {
+                continue;
+            }
+
             Gate gate = slot.getGate();
             Signal newSignal = new Signal(newSignalName());
             circuit.addSignal(newSignal);
-            if (!outputs.get(outputPos).isInverted()) {
+            if (!outputSlots.get(outputPos).isInverted()) {
                 gate.connectSignal(slot.getSlot(), newSignal);
             } else {
                 Gate notOutput = new Not(1, STANDARD_DELAY, newGateName());
@@ -137,7 +142,7 @@ public class LogiFlashParser {
                 notOutput.connectSignal("o", newSignal);
             }
 
-            for (LogiSlot connectedInputSlot : getConnectedInputSlots(outputPos)) {
+            for (LogiSlot connectedInputSlot : connectedInputSlots) {
                 if (!connectedInputSlot.isInverted()) {
                     connectedInputSlot.getGate().connectSignal(connectedInputSlot.getSlot(), newSignal);
                 } else {
@@ -251,11 +256,11 @@ public class LogiFlashParser {
         }
 
         for (int i = 0; i < relativeInputSlotPositions.size(); i++) {
-            inputs.put(pos.add(relativeInputSlotPositions.get(i)), inputSlots.get(i));
+            this.inputSlots.put(pos.add(relativeInputSlotPositions.get(i)), inputSlots.get(i));
         }
 
         for (int i = 0; i < relativeOutputSlotPositions.size(); i++) {
-            outputs.put(pos.add(relativeOutputSlotPositions.get(i)), outputSlots.get(i));
+            this.outputSlots.put(pos.add(relativeOutputSlotPositions.get(i)), outputSlots.get(i));
         }
     }
 
@@ -265,8 +270,8 @@ public class LogiFlashParser {
         for (LogiWire wire : wires) {
             if (wire.contains(pos)) {
                 for (LogiVector point : wire.getPoints()) {
-                    if (inputs.containsKey(point)) {
-                        connectedInputSlots.add(inputs.get(point));
+                    if (inputSlots.containsKey(point)) {
+                        connectedInputSlots.add(inputSlots.get(point));
                     }
                 }
             }
