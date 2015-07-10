@@ -25,10 +25,10 @@ public class LogicSimulator {
             LogiFlashParser parser = new LogiFlashParser(circuitFile);
             circuit = parser.parse();
         } else {
-            String circuitString = readFileContent(circuitFile);
+            String circuitString = fileToString(circuitFile);
             circuit = CirParser.parse(circuitString);
         }
-        String eventString = readFileContent(eventFile);
+        String eventString = fileToString(eventFile);
         EventParser.parse(eventString, circuit);
     }
 
@@ -41,7 +41,8 @@ public class LogicSimulator {
 
             Circuit c = new LogiFlashParser(xmlFile).parse();
             String cirString = CirCreator.create(c);
-            System.out.println(cirString);
+
+            stringToFile(cirString, cirFile);
         } else if (args.length == 4) {
             File circuitFile = new File(args[0]);
             File eventFile = new File(args[1]);
@@ -51,11 +52,7 @@ public class LogicSimulator {
             LogicSimulator simulator = new LogicSimulator(circuitFile, eventFile);
             SimulationResult result = simulator.simulate();
 
-            ergFile.delete();
-            ergFile.createNewFile();
-            System.setOut(new PrintStream(ergFile)); // TODO: Irgendwie Mist
-            System.out.println(ErgCreator.create(result));
-
+            stringToFile(ErgCreator.create(result), ergFile);
             ImageIO.write(DiagramCreator.create(result), "PNG", graphFile);
         } else {
             System.out.println("Unzureichende Parameter. Moeglichkeiten:");
@@ -65,7 +62,7 @@ public class LogicSimulator {
         }
     }
 
-    private String readFileContent(File file) throws IOException {
+    private static String fileToString(File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String content = "";
 
@@ -76,6 +73,14 @@ public class LogicSimulator {
         }
 
         return content;
+    }
+
+    private static void stringToFile(String content, File file) throws IOException {
+        PrintWriter w = new PrintWriter(file);
+        file.delete();
+        file.createNewFile();
+        w.println(content);
+        w.close();
     }
 
     public SimulationResult simulate() {
