@@ -21,8 +21,8 @@ public class LogiFlashParser {
     private static final LogiVector OUTPUT_NOT_OFFSET = new LogiVector(20, 0);
     private static final LogiVector INPUT_NOT_OFFSET = new LogiVector(-20, 0);
 
-    private static final LogiVector EVEN_INPUT_OFFSET = new LogiVector(0, -40);
-    private static final LogiVector ODD_INPUT_OFFSET = new LogiVector(0, -30);
+    private static final LogiVector EVEN_INPUT_OFFSET = new LogiVector(0, 40);
+    private static final LogiVector ODD_INPUT_OFFSET = new LogiVector(0, 30);
     private static final LogiVector IN_OUT_OFFSET = new LogiVector(20, 0);
     private static final int STANDARD_DELAY = 1;
 

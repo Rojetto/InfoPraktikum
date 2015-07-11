@@ -33,7 +33,7 @@ public class CirCreator {
         }
 
         if (circuit.getInputs().size() > 0) {
-            result += "Input " + listWithCommas(circuit.getInputs()) + ";\n";
+            result += "Input " + listWithCommas(circuit.getInputs()) + ";\n\n";
         }
 
         for (Signal out : circuit.getOutputs()) {
@@ -41,14 +41,18 @@ public class CirCreator {
         }
 
         if (circuit.getOutputs().size() > 0) {
-            result += "Output " + listWithCommas(circuit.getOutputs()) + ";\n";
+            result += "Output " + listWithCommas(circuit.getOutputs()) + ";\n\n";
         }
 
-        result += "Signal " + listWithCommas(internalSignals) + ";\n";
+        if (internalSignals.size() > 0) {
+            result += "Signal " + listWithCommas(internalSignals) + ";\n\n";
+        }
 
         for (Gate gate : circuit.getGates()) {
             result += "Gate " + gate.getName() + " " + getGateTypeName(gate) + " Delay " + gate.getDelay() + ";\n";
         }
+
+        result += "\n";
 
         for (Gate gate : circuit.getGates()) {
             for (String slot : gate.getSlots().keySet()) {

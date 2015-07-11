@@ -24,6 +24,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
     private JTextField eventField;
     private JButton eventButton;
     private JButton simulateButton;
+    private JButton helpButton;
     private JLabel imageLabel;
 
     public SimulatorWindow() {
@@ -69,6 +70,10 @@ public class SimulatorWindow extends JFrame implements ActionListener {
         simulateButton.addActionListener(this);
         inputPanel.add(simulateButton);
 
+        helpButton = new JButton("Hilfe");
+        helpButton.addActionListener(this);
+        inputPanel.add(helpButton);
+
         inputLayout.putConstraint(NORTH, circuitField, 5, NORTH, inputPanel);
         inputLayout.putConstraint(WEST, circuitField, 5, WEST, inputPanel);
         inputLayout.putConstraint(NORTH, circuitButton, 5, NORTH, inputPanel);
@@ -84,6 +89,9 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
         inputLayout.putConstraint(NORTH, simulateButton, 5, SOUTH, eventButton);
         inputLayout.putConstraint(EAST, simulateButton, -5, EAST, inputPanel);
+
+        inputLayout.putConstraint(NORTH, helpButton, 0, NORTH, simulateButton);
+        inputLayout.putConstraint(EAST, helpButton, -5, WEST, simulateButton);
 
         imageLabel = new JLabel();
         add(new JScrollPane(imageLabel), BorderLayout.SOUTH);
@@ -151,9 +159,12 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
                 pack();
             } catch (Exception e1) {
-                System.out.println("Bei der Simulation ist ein Fehler aufgetreten.");
+                System.out.println("Bei der Simulation ist ein Fehler aufgetreten."); //  TODO: Mmmh, nee
                 System.out.println(e1.getClass().getName() + ": " + e1.getMessage());
             }
+        } else if (e.getSource() == helpButton) {
+            JOptionPane.showMessageDialog(this, "HILFE HILFE, WAS MUSS ICH TUN! WAS MACHEN DIE PARAMETER?",
+                    "Hilfe", JOptionPane.PLAIN_MESSAGE);
         }
     }
 }

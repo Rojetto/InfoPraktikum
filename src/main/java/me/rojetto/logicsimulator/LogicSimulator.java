@@ -118,7 +118,7 @@ public class LogicSimulator {
         }
         file.createNewFile();
         PrintWriter w = new PrintWriter(file);
-        w.println(content);
+        w.print(content);
         w.close();
     }
 

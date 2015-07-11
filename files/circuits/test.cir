@@ -1,22 +1,26 @@
 Input in1;
+
 Output o1;
-Signal i0, i4, i3, i2, i1;
+
+Signal i0, i1, i2, i3, i4;
+
+Gate g0 BUF Delay 2;
+Gate g1 OR2 Delay 1;
 Gate g2 BUF Delay 1;
-Gate g1 BUF Delay 3;
-Gate g0 EXOR2 Delay 1;
-Gate g5 NOT Delay 1;
-Gate g4 NOT Delay 1;
 Gate g3 BUF Delay 1;
-g2.o = i2;
-g2.i1 = in1;
-g1.o = i1;
-g1.i1 = i2;
-g0.o = i4;
-g0.i2 = i2;
+Gate g4 NOT Delay 1;
+Gate g5 NOT Delay 1;
+
 g0.i1 = i0;
-g5.o = i3;
-g5.i1 = i4;
-g4.o = i0;
-g4.i1 = i1;
+g0.o = i2;
+g1.i1 = i4;
+g1.i2 = i1;
+g1.o = i0;
+g2.i1 = in1;
+g2.o = i3;
+g3.i1 = i1;
 g3.o = o1;
-g3.i1 = i3;
+g4.i1 = i2;
+g4.o = i1;
+g5.i1 = i3;
+g5.o = i4;
