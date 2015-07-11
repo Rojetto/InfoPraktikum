@@ -123,6 +123,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
                 }
 
                 fileChooser.setFileFilter(new FileNameExtensionFilter("Circuit Datei", "cir"));
+                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("LogiFlash XML Datei", "xml"));
             }
 
             if (e.getSource() == eventButton) {
