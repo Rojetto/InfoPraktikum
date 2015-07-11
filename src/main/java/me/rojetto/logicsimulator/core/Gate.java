@@ -11,7 +11,7 @@ import java.util.Map;
  * Abstrakte Superklasse f�r alle Logikgatter der Schaltung.
  */
 public abstract class Gate {
-    public static final int MAX_RECURSION_DEPTH = 100; // TODO: Konfigurierbar machen
+    public static final int MAX_RECURSION_DEPTH = 1000; // TODO: Konfigurierbar machen
 
     private final Map<String, Signal> inputs;
     private final int numberOfInputs;
@@ -102,9 +102,9 @@ public abstract class Gate {
 
         for (Signal s : signalsToUpdate) {
             if (timed) {
-                new Event(s, time + delay, values.get(getSignalSlot(s)));
+                new Event(s, time + delay, values.get(getOutputSlot(s)));
             } else {
-                s.setValueAndPropagate(values.get(getSignalSlot(s)));
+                s.setValueAndPropagate(values.get(getOutputSlot(s)));
             }
         }
     }
@@ -164,13 +164,7 @@ public abstract class Gate {
     /**
      * @return Name des Anschlusses, an den Signal angeschlossen ist, <code>null</code>, wenn nicht angeschlossen
      */
-    private String getSignalSlot(Signal signal) {
-        for (String slot : inputs.keySet()) {
-            if (inputs.get(slot) == signal) {
-                return slot;
-            }
-        }
-
+    private String getOutputSlot(Signal signal) {
         for (String slot : outputs.keySet()) {
             if (outputs.get(slot) == signal) {
                 return slot;
