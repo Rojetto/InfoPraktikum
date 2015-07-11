@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstrakte Superklasse für alle Logikgatter der Schaltung.
+ * Abstrakte Superklasse fï¿½r alle Logikgatter der Schaltung.
  */
 public abstract class Gate {
+    public static final int MAX_RECURSION_DEPTH = 100; // TODO: Konfigurierbar machen
+
     private final Map<String, Signal> inputs;
     private final int numberOfInputs;
     private final int delay;
@@ -18,9 +20,11 @@ public abstract class Gate {
     private final Map<String, Signal> outputs;
     private Map<String, Boolean> lastOutputs;
     private boolean isFirstCalculation;
+    private int nonTimedUpdateCounter;
+    private int timedUpdateCounter;
 
     /**
-     * @param numberOfInputs Anzahl der Eingänge
+     * @param numberOfInputs Anzahl der Eingï¿½nge
      * @param delay          Berechnungsdauer des Gatters
      * @param name           Name des Gatters
      */
@@ -57,15 +61,15 @@ public abstract class Gate {
     }
 
     /**
-     * Propagiert Ergebnis bei Änderung zeitunabhängig direkt an anliegende Signale
+     * Propagiert Ergebnis bei ï¿½nderung zeitunabhï¿½ngig direkt an anliegende Signale
      */
     public void update() {
         propagateCalculations(calculateOutput(getInputValues()), false, 0);
     }
 
     /**
-     * Propagiert Ergebnis bei Änderung zeitabhängig an anliegende Signale
-     * @param time Zeit, zu der sich Eingänge geändert haben
+     * Propagiert Ergebnis bei ï¿½nderung zeitabhï¿½ngig an anliegende Signale
+     * @param time Zeit, zu der sich Eingï¿½nge geï¿½ndert haben
      */
     public void timedUpdate(int time) {
         propagateCalculations(calculateOutput(getInputValues()), true, time);
@@ -75,25 +79,31 @@ public abstract class Gate {
      * Gibt berechnete Werte an Ausgangssignale weiter
      * @param values Ausgangsanschlussnamen und jeweilige Werte
      * @param timed Events erzeugen oder direkt propagieren
-     * @param time Zeit, zu der sich Eingänge geändert haben
+     * @param time Zeit, zu der sich Eingï¿½nge geï¿½ndert haben
      */
     private void propagateCalculations(Map<String, Boolean> values, boolean timed, int time) {
         List<Signal> signalsToUpdate = new ArrayList<>();
 
         for (String output : outputs.keySet()) {
-            if ((values.get(output) != lastOutputs.get(output) || isFirstCalculation) && outputs.get(output) != null) {
+            if ((values.get(output) != lastOutputs.get(output) || isFirstCalculation) && outputs.get(output) != null
+                    && !(!timed && nonTimedUpdateCounter > MAX_RECURSION_DEPTH)
+                    && !(timed && timedUpdateCounter > MAX_RECURSION_DEPTH)) {
                 signalsToUpdate.add(outputs.get(output));
             }
         }
 
         isFirstCalculation = false;
+        if (!timed) {
+            nonTimedUpdateCounter++;
+        } else {
+            timedUpdateCounter++;
+        }
         lastOutputs = values;
 
         for (Signal s : signalsToUpdate) {
             if (timed) {
                 new Event(s, time + delay, values.get(getSignalSlot(s)));
             } else {
-                // TODO: Schmiert bei instabilen Rückkopplungen ab
                 s.setValueAndPropagate(values.get(getSignalSlot(s)));
             }
         }
@@ -137,9 +147,9 @@ public abstract class Gate {
     }
 
     /**
-     * Hilfsmethode um zu überprüfen ob String auf mindestens eine aus einer Liste von Regex's passt
+     * Hilfsmethode um zu ï¿½berprï¿½fen ob String auf mindestens eine aus einer Liste von Regex's passt
      * @param array Array von Regular Expressions
-     * @param s String, der überprüft werden soll
+     * @param s String, der ï¿½berprï¿½ft werden soll
      */
     private boolean stringMatchesRegexArray(String[] array, String s) {
         for (int i = 0; i < array.length; i++) {
