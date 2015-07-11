@@ -19,11 +19,11 @@ public class LogicSimulator {
     private Circuit circuit;
 
     /**
-     * Neuer Logik-Simulator aus Schaltungs- und Eventdatei. Erstellt EventQueue und Schaltung und trägt Events
+     * Neuer Logik-Simulator aus Schaltungs- und Eventdatei. Erstellt EventQueue und Schaltung und trï¿½gt Events
      * in Queue ein.
      *
      * @param circuitFile Datei mit Schaltung im .cir oder LogiFlash .xml Format
-     * @param eventFile   Datei mit zugehörigen Events im .events Format
+     * @param eventFile   Datei mit zugehï¿½rigen Events im .events Format
      * @throws IOException             Wenn eine der Dateien nicht gelesen oder geschrieben werden konnte
      * @throws LogicSimulatorException Wenn XML-Datei nicht lesbar war
      */
@@ -45,7 +45,7 @@ public class LogicSimulator {
 
     /**
      * Main-Methode des Projekts. Hat 3 verschiedene Verhaltensweisen:<br>
-     * - 0 Argumente: Öffnet GUI des Logik-Simulators<br>
+     * - 0 Argumente: ï¿½ffnet GUI des Logik-Simulators<br>
      * - 2 Argumente: Nimmt LogiFlash .xml und konvertiert Schaltung zu .cir<br>
      * - 4 Argumente: Nimmt .cir oder .xml, .events und erzeugt .erg und .png
      *
@@ -83,7 +83,7 @@ public class LogicSimulator {
         } catch (LogicSimulatorException e1) {
             System.err.println(e1.getMessage());
         } catch (IOException e2) {
-            System.err.println(e2.getClass().getSimpleName() + ": " + e2.getMessage());
+            System.err.println(e2);
         }
     }
 
@@ -107,21 +107,23 @@ public class LogicSimulator {
     }
 
     /**
-     * Hilfsmethode um String in Datei zu speichern. Löscht Datei und erstellt sie neu bevor geschrieben wird.
+     * Hilfsmethode um String in Datei zu speichern. Lï¿½scht Datei und erstellt sie neu bevor geschrieben wird.
      * @param content String der geschrieben werden soll
      * @param file Zieldatei
      * @throws IOException Wenn ein Fehler beim Schreiben aufgetreten ist
      */
     private static void stringToFile(String content, File file) throws IOException {
-        PrintWriter w = new PrintWriter(file);
-        file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
         file.createNewFile();
+        PrintWriter w = new PrintWriter(file);
         w.println(content);
         w.close();
     }
 
     /**
-     * Arbeitet EventQueue ab bis leer, trägt Ergebnisse in neues SimulationResult ein.
+     * Arbeitet EventQueue ab bis leer, trï¿½gt Ergebnisse in neues SimulationResult ein.
      * @return Simulationsergebnis
      */
     public SimulationResult simulate() {

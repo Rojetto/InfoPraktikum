@@ -38,6 +38,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
         textArea = new JTextArea();
         textArea.setEditable(false);
+        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         PrintStream p = new PrintStream(new TextAreaOutputStream(textArea));
         System.setOut(p); // TODO: Neeeeeee
         System.setErr(p);
