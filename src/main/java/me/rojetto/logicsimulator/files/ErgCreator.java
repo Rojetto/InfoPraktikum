@@ -6,7 +6,16 @@ import me.rojetto.logicsimulator.core.SimulationResult;
 
 import java.util.List;
 
+/**
+ * Erzeugt Wertetabellen aus Simulationsergebnissen
+ */
 public class ErgCreator {
+    /**
+     * Erzeugt String mit einer Wertetabelle im ERG-Format aus einem Simulationsergebnis
+     *
+     * @param result Simulationsergebnis, das dargestellt werden soll
+     * @return Erzeugter Wertetabelle als String
+     */
     public static String create(SimulationResult result) {
         List<Signal> signals = result.getSignals();
         String headerFormat = "Zeit   ";

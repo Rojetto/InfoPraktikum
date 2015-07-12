@@ -18,7 +18,13 @@ import java.io.PrintWriter;
 
 import static javax.swing.SpringLayout.*;
 
+/**
+ * Die grafische Oberfläche des Logik-Simulators.
+ */
 public class SimulatorWindow extends JFrame implements ActionListener {
+    /**
+     * Der Text, der im Hilfe-Fenster angezeigt wird
+     */
     public static final String HELP_STRING =
             "Das Programm liest Schaltungen im CIR- oder LogiFlash-XML-Format und Eingabesequenzen im\n" +
                     "EVENTS-Format ein, simuliert die Schaltung und generiert eine Wertetabelle und ein Diagramm.\n" +
@@ -54,6 +60,9 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
     private final PrintWriter guiOut;
 
+    /**
+     * Erzeugt ein neues Fenster und zeigt es an
+     */
     public SimulatorWindow() {
         super("Logik-Simulator");
 
@@ -154,6 +163,11 @@ public class SimulatorWindow extends JFrame implements ActionListener {
         return new File(eventField.getText());
     }
 
+    /**
+     * Wird aufgerufen, wenn einer der Knöpfe gedrückt wird
+     *
+     * @param e Auslösendes Event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == circuitButton || e.getSource() == eventButton) {

@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Konvertiert Circuit Instanzen zu Strings im CIR-Format
+ */
 public class CirCreator {
     private static final Map<Class<? extends Gate>, String> TYPE_NAMES = new HashMap<>();
 
@@ -24,6 +27,12 @@ public class CirCreator {
         TYPE_NAMES.put(FF.class, "FF");
     }
 
+    /**
+     * Erzeugt einen String im CIR-Format aus einer Circuit Instanz
+     *
+     * @param circuit Schaltung, die konvertiert werden soll
+     * @return Erzeugter String
+     */
     public static String create(Circuit circuit) {
         String result = "";
         List<Signal> internalSignals = circuit.getSignals();

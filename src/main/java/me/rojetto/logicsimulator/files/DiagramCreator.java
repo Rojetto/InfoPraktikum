@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+/**
+ * Erstellt Diagramme aus Simulationsergebnissen.
+ */
 public class DiagramCreator {
     private static int hOffset = 100;
     private static int vOffset = 20;
@@ -15,6 +18,12 @@ public class DiagramCreator {
     private static int textInterval = 50;
     private static int lineInterval = 10;
 
+    /**
+     * Erzeugt ein neues Diagramm aus einem Simulationsergebnis
+     *
+     * @param result Simulationsergebnis, das dargestellt werden soll
+     * @return Diagramm als Bild
+     */
     public static BufferedImage create(SimulationResult result) {
         int timeLineLength = result.lastState().getTime() + 10;
         List<Signal> signals = result.getSignals();

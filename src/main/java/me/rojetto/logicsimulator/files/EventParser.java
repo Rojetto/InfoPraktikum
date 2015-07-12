@@ -8,9 +8,19 @@ import me.rojetto.logicsimulator.core.Signal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Liest Strings im EVENTS-Format ein, generiert die entsprechenden Events und ordnet sie in die EventQueue ein.
+ */
 public class EventParser {
     private static final Pattern linePattern = Pattern.compile("\\s*(\\d+)\\s+([a-zA-Z0-9]+)\\s+([01])\\s*");
 
+    /**
+     * Erzeugt neue Events aus einem String im EVENTS-Format
+     *
+     * @param content Einzulesender String im EVENTS-Format
+     * @param circuit Schaltung, für die Events erzeugt werden sollen
+     * @throws LogicSimulatorException Wenn ein im String erwähntes Signal nicht in der Schaltung existiert
+     */
     public static void parse(String content, Circuit circuit) throws LogicSimulatorException {
         content = content.replaceAll("#.*", "");
 

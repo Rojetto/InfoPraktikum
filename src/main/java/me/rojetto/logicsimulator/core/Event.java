@@ -1,7 +1,7 @@
 package me.rojetto.logicsimulator.core;
 
 /**
- * Die �nderung eines Signalswertes zu einer bestimmten Zeit
+ * Die Änderung eines Signalswertes zu einer bestimmten Zeit
  */
 public class Event {
     private static EventQueue eventQueue;

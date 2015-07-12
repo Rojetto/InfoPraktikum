@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Hilfsklasse, um mit einem PrintWriter auf eine JTextArea zu schreiben
+ */
 public class TextAreaOutputStream extends OutputStream {
     private JTextArea textArea;
     private StringBuilder sb = new StringBuilder();

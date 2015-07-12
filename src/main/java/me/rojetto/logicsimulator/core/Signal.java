@@ -48,7 +48,6 @@ public class Signal {
 
     /**
      * Interne Methode, die Gatter auf Signalen aufrufen, die an ihre Eingänge angeschlossen werden.
-     *
      * @param gate Gatter, dass über Wertänderungen informiert werden soll
      */
     public void addOutput(Gate gate) {
