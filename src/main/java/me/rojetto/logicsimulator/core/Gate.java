@@ -1,5 +1,6 @@
 package me.rojetto.logicsimulator.core;
 
+import me.rojetto.logicsimulator.LogicSimulator;
 import me.rojetto.logicsimulator.LogicSimulatorException;
 
 import java.util.ArrayList;
@@ -8,11 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstrakte Superklasse f�r alle Logikgatter der Schaltung.
+ * Abstrakte Superklasse für alle Logikgatter der Schaltung.
  */
 public abstract class Gate {
-    public static final int MAX_RECURSION_DEPTH = 1000; // TODO: Konfigurierbar machen
-
     private final Map<String, Signal> inputs;
     private final int numberOfInputs;
     private final int delay;
@@ -24,7 +23,7 @@ public abstract class Gate {
     private int timedUpdateCounter;
 
     /**
-     * @param numberOfInputs Anzahl der Eing�nge
+     * @param numberOfInputs Anzahl der Eingänge
      * @param delay          Berechnungsdauer des Gatters
      * @param name           Name des Gatters
      */
@@ -61,15 +60,15 @@ public abstract class Gate {
     }
 
     /**
-     * Propagiert Ergebnis bei �nderung zeitunabh�ngig direkt an anliegende Signale
+     * Propagiert Ergebnis bei Änderung zeitunabhängig direkt an anliegende Signale
      */
     public void update() {
         propagateCalculations(calculateOutput(getInputValues()), false, 0);
     }
 
     /**
-     * Propagiert Ergebnis bei �nderung zeitabh�ngig an anliegende Signale
-     * @param time Zeit, zu der sich Eing�nge ge�ndert haben
+     * Propagiert Ergebnis bei Änderung zeitabhängig an anliegende Signale
+     * @param time Zeit, zu der sich Eingänge geändert haben
      */
     public void timedUpdate(int time) {
         propagateCalculations(calculateOutput(getInputValues()), true, time);
@@ -79,15 +78,15 @@ public abstract class Gate {
      * Gibt berechnete Werte an Ausgangssignale weiter
      * @param values Ausgangsanschlussnamen und jeweilige Werte
      * @param timed Events erzeugen oder direkt propagieren
-     * @param time Zeit, zu der sich Eing�nge ge�ndert haben
+     * @param time Zeit, zu der sich Eingänge geändert haben
      */
     private void propagateCalculations(Map<String, Boolean> values, boolean timed, int time) {
         List<Signal> signalsToUpdate = new ArrayList<>();
 
         for (String output : outputs.keySet()) {
             if ((values.get(output) != lastOutputs.get(output) || isFirstCalculation) && outputs.get(output) != null
-                    && !(!timed && nonTimedUpdateCounter > MAX_RECURSION_DEPTH)
-                    && !(timed && timedUpdateCounter > MAX_RECURSION_DEPTH)) {
+                    && !(!timed && nonTimedUpdateCounter > LogicSimulator.getMaxUpdates())
+                    && !(timed && timedUpdateCounter > LogicSimulator.getMaxUpdates())) {
                 signalsToUpdate.add(outputs.get(output));
             }
         }
@@ -147,9 +146,9 @@ public abstract class Gate {
     }
 
     /**
-     * Hilfsmethode um zu �berpr�fen ob String auf mindestens eine aus einer Liste von Regex's passt
+     * Hilfsmethode um zu überprüfen ob String auf mindestens eine aus einer Liste von Regex's passt
      * @param array Array von Regular Expressions
-     * @param s String, der �berpr�ft werden soll
+     * @param s String, der überprüft werden soll
      */
     private boolean stringMatchesRegexArray(String[] array, String s) {
         for (int i = 0; i < array.length; i++) {

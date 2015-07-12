@@ -27,6 +27,8 @@ public class SimulatorWindow extends JFrame implements ActionListener {
     private JButton eventButton;
     private JButton simulateButton;
     private JButton helpButton;
+    private JLabel maxUpdatesLabel;
+    private JTextField maxUpdatesField;
     private JLabel imageLabel;
 
     private final PrintWriter guiOut;
@@ -47,7 +49,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
         textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         guiOut = new PrintWriter(new TextAreaOutputStream(textArea), true);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(400, 300));
+        scrollPane.setPreferredSize(new Dimension(500, 300));
         add(scrollPane, BorderLayout.CENTER);
 
         SpringLayout inputLayout = new SpringLayout();
@@ -68,13 +70,20 @@ public class SimulatorWindow extends JFrame implements ActionListener {
         eventButton.addActionListener(this);
         inputPanel.add(eventButton);
 
-        simulateButton = new JButton("Simulation starten");
+        simulateButton = new JButton("Simulieren");
         simulateButton.addActionListener(this);
         inputPanel.add(simulateButton);
 
         helpButton = new JButton("Hilfe");
         helpButton.addActionListener(this);
         inputPanel.add(helpButton);
+
+        maxUpdatesLabel = new JLabel("Maximale Updates");
+        inputPanel.add(maxUpdatesLabel);
+
+        maxUpdatesField = new JTextField();
+        maxUpdatesField.setText(LogicSimulator.DEFAULT_MAX_UPDATES + "");
+        inputPanel.add(maxUpdatesField);
 
         inputLayout.putConstraint(NORTH, circuitButton, 5, NORTH, inputPanel);
         inputLayout.putConstraint(EAST, circuitButton, -5, EAST, inputPanel);
@@ -91,9 +100,18 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
         inputLayout.putConstraint(NORTH, simulateButton, 5, SOUTH, eventButton);
         inputLayout.putConstraint(EAST, simulateButton, -5, EAST, inputPanel);
+        inputLayout.putConstraint(WEST, simulateButton, 0, WEST, circuitButton);
 
         inputLayout.putConstraint(NORTH, helpButton, 0, NORTH, simulateButton);
         inputLayout.putConstraint(EAST, helpButton, -5, WEST, simulateButton);
+
+        inputLayout.putConstraint(WEST, maxUpdatesLabel, 5, WEST, inputPanel);
+        inputLayout.putConstraint(VERTICAL_CENTER, maxUpdatesLabel, 0, VERTICAL_CENTER, simulateButton);
+
+        inputLayout.putConstraint(WEST, maxUpdatesField, 5, EAST, maxUpdatesLabel);
+        inputLayout.putConstraint(EAST, maxUpdatesField, -5, WEST, helpButton);
+        inputLayout.putConstraint(VERTICAL_CENTER, maxUpdatesField, 0, VERTICAL_CENTER, simulateButton);
+
         inputLayout.putConstraint(SOUTH, inputPanel, 5, SOUTH, simulateButton);
 
         imageLabel = new JLabel();
@@ -141,19 +159,31 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
+                String fileNameWithoutExtension = file.getName();
+                if (fileNameWithoutExtension.contains(".")) {
+                    fileNameWithoutExtension = fileNameWithoutExtension.substring(0,
+                            fileNameWithoutExtension.lastIndexOf("."));
+                }
 
                 if (e.getSource() == circuitButton) {
                     circuitField.setText(file.getAbsolutePath());
+                    if (eventField.getText().length() == 0) {
+                        eventField.setText(file.getParent() + File.separator + fileNameWithoutExtension + ".events");
+                    }
                 }
 
                 if (e.getSource() == eventButton) {
                     eventField.setText(file.getAbsolutePath());
+                    if (circuitField.getText().length() == 0) {
+                        circuitField.setText(file.getParent() + File.separator + fileNameWithoutExtension + ".cir");
+                    }
                 }
             }
         } else if (e.getSource() == simulateButton) {
             try {
                 textArea.setText("");
-                LogicSimulator simulator = new LogicSimulator(getCircuitFile(), getEventFile());
+                int maxUpdates = Integer.parseInt(maxUpdatesField.getText());
+                LogicSimulator simulator = new LogicSimulator(getCircuitFile(), getEventFile(), maxUpdates);
                 SimulationResult result = simulator.simulate();
 
                 guiOut.println(ErgCreator.create(result));
@@ -162,7 +192,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
                 imageLabel.setIcon(new ImageIcon(graph));
 
                 pack();
-            } catch (LogicSimulatorException | IOException e1) {
+            } catch (LogicSimulatorException | NumberFormatException | IOException e1) {
                 guiOut.println(e1);
             }
         } else if (e.getSource() == helpButton) {
