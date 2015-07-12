@@ -19,6 +19,27 @@ import java.io.PrintWriter;
 import static javax.swing.SpringLayout.*;
 
 public class SimulatorWindow extends JFrame implements ActionListener {
+    public static final String HELP_STRING =
+            "Das Programm liest Schaltungen im CIR- oder LogiFlash-XML-Format und Eingabesequenzen im\n" +
+                    "EVENTS-Format ein, simuliert die Schaltung und generiert eine Wertetabelle und ein Diagramm.\n" +
+                    "Da der Simulator instabile Rückkopplungen unterstützt, kann man außerdem die maximale\n" +
+                    "Anzahl von Updates einstellen, bevor ein Gatter seine Berechnungen abbricht.\n\n" +
+                    "Das Programm lässt sich in drei verschiedenen Modi verwenden:\n" +
+                    "- Keine Kommandozeilenparameter: Öffnet diese grafische Oberfläche. Die Ergebnisse\n" +
+                    "    werden direkt im Fenster ausgegeben und nicht gespeichert.\n" +
+                    "- 2 Kommandozeilenparameter: Konvertiert eine LogiFlash Schaltung im XML-Format\n" +
+                    "    zu einer Schaltung im CIR-Format und speichert das Ergebnis in eine neue Datei.\n" +
+                    "    Format: [in: xml] [out: cir]\n" +
+                    "    Beispiel: \"java -jar LogicSimulator.jar bsp.xml bsp.cir\"\n" +
+                    "- 4|5 Kommandozeilenparameter: Führt die Simulation ohne grafische Oberfläche aus und\n" +
+                    "    speichert das Ergebnis in einer ERG- und einer PNG-Datei. Der letzte Parameter ist optional.\n" +
+                    "    Format: [in: schaltung] [in: events] [out: ergebnis] [out: diagramm] <in: maxUpdates>\n" +
+                    "    Beispiel: \"java -jar LogicSimulator.jar bsp.cir bsp.events bsp.erg bsp.png 5000\"\n\n" +
+                    "Hinweis zum LogiFlash-Import: Es werden nur Gatter unterstützt, die auch im CIR-Format existieren.\n" +
+                    "Buttons werden als Eingangs- und Lampen als Ausgangssignale interpretiert.\n\n" +
+                    "Entstanden im Rahmen eines Informatikpraktikums an der TU Dresden.\n" +
+                    "Autoren: Robert Heedt und Julius Lorenz";
+
     private JTextArea textArea;
     private JPanel inputPanel;
     private JTextField circuitField;
@@ -34,7 +55,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
     private final PrintWriter guiOut;
 
     public SimulatorWindow() {
-        super("Logic Simulator");
+        super("Logik-Simulator");
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -196,8 +217,7 @@ public class SimulatorWindow extends JFrame implements ActionListener {
                 guiOut.println(e1);
             }
         } else if (e.getSource() == helpButton) {
-            JOptionPane.showMessageDialog(this, "HILFE HILFE, WAS MUSS ICH TUN! WAS MACHEN DIE PARAMETER?",
-                    "Hilfe", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, HELP_STRING, "Hilfe", JOptionPane.PLAIN_MESSAGE);
         }
     }
 }
