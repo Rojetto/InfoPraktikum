@@ -26,7 +26,7 @@ public class ErgCreator {
 
         rowFormat += "\n";
 
-        String s = String.format(headerFormat, names);
+        String s = String.format(headerFormat, (Object[]) names);
         s += "\n\n";
 
         for (SignalState frame : result.getSignalStates()) {
