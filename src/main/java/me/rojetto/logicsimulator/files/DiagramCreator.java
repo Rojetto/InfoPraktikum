@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class DiagramCreator {
-    private static int hOffset = 100; // TODO: Parameter flexibler machen
+    private static int hOffset = 100;
     private static int vOffset = 20;
     private static int lineHeight = 20;
     private static int textInterval = 50;

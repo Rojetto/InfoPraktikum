@@ -41,7 +41,7 @@ public class CirParser {
 
         content = content.replaceAll("#.+", "");
 
-        String statement = firstStatement(content); // TODO: Dinge hinter letztem gültigen Statement werden ignoriert
+        String statement = firstStatement(content);
         while (statement != null) {
             Pattern p = identifyPattern(statement);
             if (p == null) {
@@ -116,6 +116,10 @@ public class CirParser {
         Matcher m = statementPattern.matcher(s);
         if (m.find()) {
             return m.group(1);
+        }
+
+        if (s.trim().length() > 0) {
+            return s;
         }
 
         return null;
