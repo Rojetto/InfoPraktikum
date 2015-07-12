@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Abstrakte Superklasse f¸r alle Gatter mit einem Ausgang mit Namen "o" und beliebig vielen Eing‰ngen mit Namen "i1",
+ * Abstrakte Superklasse f√ºr alle Gatter mit einem Ausgang mit Namen "o" und beliebig vielen Eing√§ngen mit Namen "i1",
  * "i2" etc., deren Reihenfolge keine Rolle spielt
  */
 public abstract class SimpleGate extends Gate {
@@ -14,7 +14,7 @@ public abstract class SimpleGate extends Gate {
 
     /**
      * Konkrete Implementierung, die alle Eingangswerte in ein Array zusammenfasst und zur Berechnung weitergibt,
-     * sowie Ergebnis in Ausgang "o" eintr‰gt
+     * sowie Ergebnis in Ausgang "o" eintr√§gt
      */
     @Override
     protected Map<String, Boolean> calculateOutput(Map<String, Boolean> inputValues) {

@@ -15,22 +15,24 @@ public class EventQueue {
     }
 
     /**
-     * Sind noch Events in Queue?
+     * @return <code>true</code>, wenn die Queue noch nicht leer ist
      */
     public boolean hasMore() {
         return queue.size() > 0;
     }
 
     /**
-     * Gibt nächstes anstehendes Event aus Queue und entfernt es
+     * Gibt nÃ¤chstes anstehendes Event aus Queue und entfernt es
+     * @return NÃ¤chstes Event
      */
     public Event getFirst() {
         return queue.remove(0);
     }
 
     /**
-     * Sortiert Event an höchstmögliche Position in Queue ein. Wenn ein Event mit widersprüchlichen Eigenschaften
-     * bereits existiert, wird Queue dementsprechend aufgeräumt.
+     * Sortiert Event an hÃ¶chstmÃ¶gliche Position in Queue ein. Wenn ein Event mit widersprÃ¼chlichen Eigenschaften
+     * bereits existiert, wird Queue dementsprechend aufgerÃ¤umt.
+     * @param event HinzuzufÃ¼gendes Event
      */
     public void addEvent(Event event) {
         if (removeEventWithTimeAndSignal(event.getTime(), event.getSignal())) {
@@ -48,9 +50,9 @@ public class EventQueue {
     }
 
     /**
-     * Entfernt Events aus Queue, die zu bestimmter Zeit bestimmtes Signal verändern
+     * Entfernt Events aus Queue, die zu bestimmter Zeit bestimmtes Signal verÃ¤ndern
      *
-     * @return Wurde etwas entfernt?
+     * @return <code>true</code>, wenn ein Event entfernt werden musste
      */
     private boolean removeEventWithTimeAndSignal(int time, Signal signal) {
         Iterator<Event> iter = queue.iterator();

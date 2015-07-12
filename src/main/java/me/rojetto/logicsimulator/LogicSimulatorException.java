@@ -1,7 +1,7 @@
 package me.rojetto.logicsimulator;
 
 /**
- * Exception für alle Fehler des Programms
+ * Exception fÃ¼r alle Fehler des Programms
  */
 public class LogicSimulatorException extends Exception {
     public LogicSimulatorException(String msg) {

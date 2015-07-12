@@ -16,7 +16,7 @@ public class DiagramCreator {
     private static int lineInterval = 10;
 
     public static BufferedImage create(SimulationResult result) {
-        int timeLineLength = result.lastFrame().getTime() + 10;
+        int timeLineLength = result.lastState().getTime() + 10;
         List<Signal> signals = result.getSignals();
         List<SignalState> frames = result.getSignalStates();
         BufferedImage image = new BufferedImage(hOffset + timeLineLength + 20, signals.size() * lineHeight + vOffset, BufferedImage.TYPE_INT_RGB);
@@ -42,7 +42,7 @@ public class DiagramCreator {
                 graph.drawString(i + "", i + hOffset, vOffset - 2);
             }
         }
-        SignalState lastFrame = result.firstFrame();
+        SignalState lastFrame = result.firstState();
 
         frames.remove(0);
         int lastX = hOffset;

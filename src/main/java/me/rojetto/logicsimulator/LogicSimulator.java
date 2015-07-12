@@ -15,6 +15,9 @@ import java.util.Map;
  * Hauptklasse des Programms. Liest Dateien ein, simuliert, und schreibt Ergebnisse in Dateien.
  */
 public class LogicSimulator {
+    /**
+     * Standardwert für die maximale Anzahl von Updates, bis ein Gatter seine Berechnungen abbricht
+     */
     public static final int DEFAULT_MAX_UPDATES = 1000;
     private static int MAX_UPDATES = DEFAULT_MAX_UPDATES;
 
@@ -27,6 +30,7 @@ public class LogicSimulator {
      *
      * @param circuitFile Datei mit Schaltung im .cir oder LogiFlash .xml Format
      * @param eventFile   Datei mit zugehörigen Events im .events Format
+     * @param maxUpdates  Maximale Anzahl von Updates pro Gatter, bis es seine Berechnungen abbricht
      * @throws IOException             Wenn eine der Dateien nicht gelesen oder geschrieben werden konnte
      * @throws LogicSimulatorException Wenn XML-Datei nicht lesbar war
      */

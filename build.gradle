@@ -7,3 +7,9 @@ jar {
         attributes 'Main-Class': 'me.rojetto.logicsimulator.LogicSimulator'
     }
 }
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.docEncoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+}

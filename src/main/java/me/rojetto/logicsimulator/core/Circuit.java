@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Enthält alle Informationen über eine Schaltung
+ * EnthÃ¤lt alle Informationen Ã¼ber eine Schaltung
  */
 public class Circuit {
     private final List<Signal> inputs;
@@ -22,9 +22,8 @@ public class Circuit {
     }
 
     /**
-     * Fügt neues Eingangssignal zu Schaltung hinzu
-     *
-     * @param signal
+     * FÃ¼gt neues Eingangssignal zu Schaltung hinzu
+     * @param signal HinzuzufÃ¼gendes Signal
      */
     public void addInput(Signal signal) {
         inputs.add(signal);
@@ -32,8 +31,8 @@ public class Circuit {
     }
 
     /**
-     * Fügt neues Ausgangssignal zu Schaltung hinzu
-     * @param signal
+     * FÃ¼gt neues Ausgangssignal zu Schaltung hinzu
+     * @param signal HinzuzufÃ¼gendes Signal
      */
     public void addOutput(Signal signal) {
         outputs.add(signal);
@@ -41,23 +40,23 @@ public class Circuit {
     }
 
     /**
-     * Fügt neues internes Signal zu Schaltung hinzu
-     * @param signal
+     * FÃ¼gt neues internes Signal zu Schaltung hinzu
+     * @param signal HinzuzufÃ¼gendes Signal
      */
     public void addSignal(Signal signal) {
         signals.put(signal.getName(), signal);
     }
 
     /**
-     * Fügt neues Gater zu Schaltung hinzu
-     * @param gate
+     * FÃ¼gt neues Gatter zu Schaltung hinzu
+     * @param gate HinzuzufÃ¼gendes Gatter
      */
     public void addGate(Gate gate) {
         gates.put(gate.getName(), gate);
     }
 
     /**
-     * Gibt gespeichertes internes, Eingangs-, oder Ausgangssignal nach Name zurück
+     * Gibt gespeichertes internes, Eingangs-, oder Ausgangssignal nach Name zurÃ¼ck
      * @param name Name des gesuchten Signals
      * @return Gefundenes Signal, <code>null</code>, wenn kein Signal gefunden
      */
@@ -66,7 +65,7 @@ public class Circuit {
     }
 
     /**
-     * Gibt gespeichertes Gatter nach Name zurück
+     * Gibt gespeichertes Gatter nach Name zurÃ¼ck
      * @param name Name des gesuchten Gatters
      * @return Gefundenes Gatter, <code>null</code>, wenn kein Gatter gefunden
      */

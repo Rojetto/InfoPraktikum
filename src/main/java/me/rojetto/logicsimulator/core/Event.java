@@ -1,7 +1,7 @@
 package me.rojetto.logicsimulator.core;
 
 /**
- * Die Änderung eines Signalswertes zu einer bestimmten Zeit
+ * Die ï¿½nderung eines Signalswertes zu einer bestimmten Zeit
  */
 public class Event {
     private static EventQueue eventQueue;
@@ -10,10 +10,10 @@ public class Event {
     private final boolean value;
 
     /**
-     * Erzeugt neues Event und trägt es in EventQueue ein
+     * Erzeugt neues Event und trÃ¤gt es in EventQueue ein
      *
-     * @param signal Signal, das sich ändert
-     * @param time   Zeit, zu der Änderung eintritt
+     * @param signal Signal, das sich Ã¤ndert
+     * @param time   Zeit, zu der Ã„nderung eintritt
      * @param value  Neuer Wert des Signals
      */
     public Event(Signal signal, int time, boolean value) {
@@ -32,21 +32,21 @@ public class Event {
     }
 
     /**
-     * Propagiert Wertänderung durch Schaltung
+     * Propagiert WertÃ¤nderung durch Schaltung
      */
     public void propagate() {
         signal.handleEvent(this);
     }
 
     /**
-     * @return Zeit, zu der Änderung eintritt
+     * @return Zeit, zu der Ã„nderung eintritt
      */
     public int getTime() {
         return time;
     }
 
     /**
-     * @return Signal, das sich ändert
+     * @return Signal, das sich Ã¤ndert
      */
     public Signal getSignal() {
         return signal;

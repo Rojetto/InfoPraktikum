@@ -146,7 +146,7 @@ public abstract class Gate {
     }
 
     /**
-     * Hilfsmethode um zu überprüfen ob String auf mindestens eine aus einer Liste von Regex's passt
+     * Hilfsmethode um zu überprüfen ob String auf mindestens eine aus einem Array von Regex's passt
      * @param array Array von Regular Expressions
      * @param s String, der überprüft werden soll
      */
@@ -161,7 +161,7 @@ public abstract class Gate {
     }
 
     /**
-     * @return Name des Anschlusses, an den Signal angeschlossen ist, <code>null</code>, wenn nicht angeschlossen
+     * @return Name des Ausgangs, an den Signal angeschlossen ist, <code>null</code>, wenn nicht angeschlossen
      */
     private String getOutputSlot(Signal signal) {
         for (String slot : outputs.keySet()) {
