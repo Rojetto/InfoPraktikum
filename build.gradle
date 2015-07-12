@@ -1,5 +1,7 @@
 apply plugin: "java"
 
+jar.archiveName = "LogicSimulator.jar"
+
 jar {
     manifest {
         attributes 'Main-Class': 'me.rojetto.logicsimulator.LogicSimulator'

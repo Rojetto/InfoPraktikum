@@ -158,10 +158,13 @@ public class SimulatorWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == circuitButton || e.getSource() == eventButton) {
             JFileChooser fileChooser = new JFileChooser();
+            File workingDir = new File(System.getProperty("user.dir"));
 
             if (e.getSource() == circuitButton) {
                 if (getCircuitFile().exists()) {
                     fileChooser.setCurrentDirectory(getCircuitFile());
+                } else {
+                    fileChooser.setCurrentDirectory(workingDir);
                 }
 
                 fileChooser.setFileFilter(new FileNameExtensionFilter("Circuit Datei", "cir"));
@@ -171,6 +174,8 @@ public class SimulatorWindow extends JFrame implements ActionListener {
             if (e.getSource() == eventButton) {
                 if (getEventFile().exists()) {
                     fileChooser.setCurrentDirectory(getEventFile());
+                } else {
+                    fileChooser.setCurrentDirectory(workingDir);
                 }
 
                 fileChooser.setFileFilter(new FileNameExtensionFilter("Events Datei", "events"));
@@ -180,24 +185,13 @@ public class SimulatorWindow extends JFrame implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                String fileNameWithoutExtension = file.getName();
-                if (fileNameWithoutExtension.contains(".")) {
-                    fileNameWithoutExtension = fileNameWithoutExtension.substring(0,
-                            fileNameWithoutExtension.lastIndexOf("."));
-                }
 
                 if (e.getSource() == circuitButton) {
                     circuitField.setText(file.getAbsolutePath());
-                    if (eventField.getText().length() == 0) {
-                        eventField.setText(file.getParent() + File.separator + fileNameWithoutExtension + ".events");
-                    }
                 }
 
                 if (e.getSource() == eventButton) {
                     eventField.setText(file.getAbsolutePath());
-                    if (circuitField.getText().length() == 0) {
-                        circuitField.setText(file.getParent() + File.separator + fileNameWithoutExtension + ".cir");
-                    }
                 }
             }
         } else if (e.getSource() == simulateButton) {
