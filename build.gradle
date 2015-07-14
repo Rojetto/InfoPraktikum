@@ -2,6 +2,9 @@ apply plugin: "java"
 
 jar.archiveName = "LogicSimulator.jar"
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 jar {
     manifest {
         attributes 'Main-Class': 'me.rojetto.logicsimulator.LogicSimulator'

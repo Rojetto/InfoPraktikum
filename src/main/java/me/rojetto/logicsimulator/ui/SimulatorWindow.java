@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import static javax.swing.SpringLayout.*;
 
@@ -225,7 +226,11 @@ public class SimulatorWindow extends JFrame implements ActionListener {
                 guiOut.println(e1);
             }
         } else if (e.getSource() == helpButton) {
-            JOptionPane.showMessageDialog(this, HELP_STRING, "Hilfe", JOptionPane.PLAIN_MESSAGE);
+            try {
+                JOptionPane.showMessageDialog(this, new String(HELP_STRING.getBytes(), "UTF-8"), "Hilfe", JOptionPane.PLAIN_MESSAGE);
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 }
