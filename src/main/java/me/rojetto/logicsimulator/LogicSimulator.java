@@ -96,10 +96,8 @@ public class LogicSimulator {
                 System.out.println("Simulation: [in: schaltung] [in: events] [out: ergebnis] [out: diagramm] <in: maxUpdates>");
                 System.out.println("LogiFlash Converter: [in: xml] [out: cir]");
             }
-        } catch (LogicSimulatorException e1) {
+        } catch (LogicSimulatorException | IOException e1) {
             System.err.println(e1.getMessage());
-        } catch (IOException e2) {
-            System.err.println(e2);
         }
     }
 
@@ -112,6 +110,7 @@ public class LogicSimulator {
 
     /**
      * Hilfsmethode um String aus Textdatei auszulesen
+     *
      * @param file Auszulesende Datei
      * @return Generierter String aus allen Zeilen der Datei
      * @throws IOException Wenn Datei nicht gelesen werden konnte
@@ -131,8 +130,9 @@ public class LogicSimulator {
 
     /**
      * Hilfsmethode um String in Datei zu speichern. Löscht Datei und erstellt sie neu bevor geschrieben wird.
+     *
      * @param content String der geschrieben werden soll
-     * @param file Zieldatei
+     * @param file    Zieldatei
      * @throws IOException Wenn ein Fehler beim Schreiben aufgetreten ist
      */
     private static void stringToFile(String content, File file) throws IOException {
@@ -148,6 +148,7 @@ public class LogicSimulator {
 
     /**
      * Arbeitet EventQueue ab bis leer, trägt Ergebnisse in neues SimulationResult ein.
+     *
      * @return Simulationsergebnis
      */
     public SimulationResult simulate() {
